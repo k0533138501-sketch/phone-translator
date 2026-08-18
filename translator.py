@@ -91,14 +91,16 @@ def yemot():
         )
 
     try:
+        print("STEP 1: entered translator try", flush=True)
         if not YEMOT_TOKEN:
             raise RuntimeError("YEMOT_TOKEN is not configured")
 
         recording_path = get_latest_recording()
+        print("STEP 2: got recording path", recording_path, flush=True)
         print("LATEST RECORDING:", recording_path, flush=True)
 
         audio_bytes = download_yemot_recording(recording_path)
-
+print("STEP 3: downloaded recording, bytes =", len(audio_bytes), flush=True)
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
             tmp.write(audio_bytes)
             tmp_path = tmp.name
