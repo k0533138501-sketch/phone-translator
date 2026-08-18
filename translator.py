@@ -4,21 +4,35 @@ app = Flask(__name__)
 
 @app.route("/", methods=["GET", "POST"])
 def yemot():
-    print("YEMOT DATA:", request.values.to_dict(), flush=True)
+    data = request.values.to_dict()
+    print("YEMOT DATA:", data, flush=True)
 
-    if "SpeechRecognition" not in request.values:
+    # Служебное сообщение Yemot после завершения звонка
+    if data.get("hangup") == "yes":
         return Response(
-            "read=t-Скажите слово или короткое предложение по-русски.=SpeechRecognition,,voice",
+            "noop=hangup",
             mimetype="text/plain"
         )
 
-    text = request.values.get("SpeechRecognition", "")
+    # Первый запрос: просим произнести русскую фразу.
+    # ru-RU задаёт русский язык распознавания.
+    if "SpeechRecognition" not in data:
+        return Response(
+            "read=t-Скажите слово или короткое предложение по-русски.=SpeechRecognition,,voice,ru-RU,no",
+            mimetype="text/plain"
+        )
+
+    # Получили распознанную речь
+    text = data.get("SpeechRecognition", "")
     print("RECOGNIZED TEXT:", text, flush=True)
 
-   return Response(
-    "go_to_folder=/",
-    mimetype="text/plain"
-)
+    # Пока только подтверждаем успешный приём.
+    # Ответ специально на иврите, чтобы не было проблемы
+    # с русским TTS в текущей настройке Yemot.
+    return Response(
+        "id_list_message=t-הדיבור התקבל בהצלחה",
+        mimetype="text/plain"
+    )
 
 @app.route("/health", methods=["GET"])
 def health():
