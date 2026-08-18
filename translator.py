@@ -15,10 +15,10 @@ def yemot():
     text = request.values.get("SpeechRecognition", "")
     print("RECOGNIZED TEXT:", text, flush=True)
 
-    return Response(
-        "id_list_message=t-Речь получена. Спасибо.",
-        mimetype="text/plain"
-    )
+   return Response(
+    "go_to_folder=/",
+    mimetype="text/plain"
+)
 
 @app.route("/health", methods=["GET"])
 def health():
