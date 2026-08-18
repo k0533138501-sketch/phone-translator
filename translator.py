@@ -49,7 +49,7 @@ def yemot():
     if "Recording" not in data:
         return Response(
             "read=t-Скажите слово или короткое предложение по-русски. "
-           "Для окончания нажмите решётку.=Recording,,record,,,no",
+          "Для окончания нажмите решётку.=Recording,,record,/1,,no,yes",
             mimetype="text/plain"
         )
 
