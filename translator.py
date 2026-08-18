@@ -1,6 +1,7 @@
 from flask import Flask, request, Response
 from openai import OpenAI
 import os
+import json
 import tempfile
 import urllib.parse
 import urllib.request
@@ -11,22 +12,68 @@ client = OpenAI()
 YEMOT_TOKEN = os.environ.get("YEMOT_TOKEN", "")
 
 
+def get_latest_recording():
+    url = (
+        "https://www.call2all.co.il/ym/api/GetIVR2Dir"
+        "?token=" + urllib.parse.quote(YEMOT_TOKEN, safe=":")
+        + "&path=2"
+    )
+
+    with urllib.request.urlopen(url, timeout=30) as r:
+        data = json.loads(r.read().decode("utf-8"))
+
+    print("YEMOT DIR DATA:", data, flush=True)
+
+    if data.get("responseStatus") != "OK":
+        raise RuntimeError("GetIVR2Dir failed: " + str(data))
+
+    files = data.get("files", [])
+
+    wav_files = []
+
+    for item in files:
+        name = str(item.get("name", ""))
+        what = str(item.get("what", ""))
+
+        candidate = name or what
+
+        if candidate.lower().endswith(".wav"):
+            filename = candidate.split("/")[-1]
+            stem = filename.rsplit(".", 1)[0]
+
+            try:
+                number = int(stem)
+            except ValueError:
+                number = -1
+
+            wav_files.append((number, candidate))
+
+    if not wav_files:
+        raise RuntimeError("No WAV recordings found in folder 2")
+
+    wav_files.sort(key=lambda x: x[0])
+    latest = wav_files[-1][1]
+
+    if latest.startswith("ivr2:"):
+        return latest
+
+    if latest.startswith("/"):
+        return "ivr2:" + latest
+
+    if latest.startswith("2/"):
+        return "ivr2:/" + latest
+
+    return "ivr2:/2/" + latest
+
+
 def download_yemot_recording(recording_path):
-    path = recording_path.strip()
-
-    # Yemot DownloadFile ожидает путь вида ivr2:/...
-    if not path.startswith("ivr2:"):
-        if not path.startswith("/"):
-            path = "/" + path
-        path = "ivr2:" + path
-
     url = (
         "https://www.call2all.co.il/ym/api/DownloadFile"
         "?token=" + urllib.parse.quote(YEMOT_TOKEN, safe=":")
-        + "&path=" + urllib.parse.quote(path, safe=":/")
+        + "&path=" + urllib.parse.quote(recording_path, safe=":/")
     )
 
-    print("DOWNLOADING RECORDING:", path, flush=True)
+    print("DOWNLOADING RECORDING:", recording_path, flush=True)
 
     with urllib.request.urlopen(url, timeout=30) as r:
         return r.read()
@@ -37,39 +84,26 @@ def yemot():
     data = request.values.to_dict()
     print("YEMOT DATA:", data, flush=True)
 
-    # Служебный запрос после завершения звонка
     if data.get("hangup") == "yes":
         return Response(
             "noop=hangup",
             mimetype="text/plain"
         )
 
-    # Первый запрос: Yemot только записывает голос.
-    # Никакого распознавания русского языка в Yemot.
-    if "Recording" not in data:
-        return Response(
-            "read=t-Скажите слово или короткое предложение по-русски. "
-          "Для окончания нажмите решётку.=Recording,,record,/1,,no,yes",
-            mimetype="text/plain"
-        )
-
-    recording_path = data.get("Recording", "")
-    print("RECORDING PATH:", recording_path, flush=True)
-
     try:
         if not YEMOT_TOKEN:
             raise RuntimeError("YEMOT_TOKEN is not configured")
 
-        # Получаем настоящий аудиофайл из Yemot
+        recording_path = get_latest_recording()
+        print("LATEST RECORDING:", recording_path, flush=True)
+
         audio_bytes = download_yemot_recording(recording_path)
 
-        # Сохраняем временно как WAV
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
             tmp.write(audio_bytes)
             tmp_path = tmp.name
 
         try:
-            # OpenAI распознаёт речь
             with open(tmp_path, "rb") as audio_file:
                 transcription = client.audio.transcriptions.create(
                     model="gpt-4o-mini-transcribe",
@@ -86,7 +120,6 @@ def yemot():
             except Exception:
                 pass
 
-        # Переводим распознанный русский текст на иврит
         result = client.responses.create(
             model="gpt-5.6-luna",
             instructions=(
@@ -102,8 +135,6 @@ def yemot():
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
-        # Пока только сообщаем об успешном переводе.
-        # Сам перевод следующим этапом заставим телефон произнести вслух.
         return Response(
             "id_list_message=t-התרגום התקבל בהצלחה",
             mimetype="text/plain"
