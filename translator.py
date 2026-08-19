@@ -100,7 +100,7 @@ def yemot():
         print("LATEST RECORDING:", recording_path, flush=True)
 
         audio_bytes = download_yemot_recording(recording_path)
-print("STEP 3: downloaded recording, bytes =", len(audio_bytes), flush=True)
+        print("STEP 3: downloaded recording, bytes =", len(audio_bytes), flush=True)
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
             tmp.write(audio_bytes)
             tmp_path = tmp.name
