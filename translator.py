@@ -138,8 +138,8 @@ def yemot():
         print("HEBREW TRANSLATION:", translation, flush=True)
 
         return Response(
-            "id_list_message=t-התרגום התקבל בהצלחה",
-            mimetype="text/plain"
+          f"id_list_message=t-{translation}",
+          mimetype="text/plain"
         )
 
     except Exception as e:
