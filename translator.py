@@ -99,10 +99,10 @@ if data.get("Replay") == "2":
         mimetype="text/plain"
     )
     if data.get("Replay") == "0":
-    return Response(
-        "go_to_folder=/",
-        mimetype="text/plain"
-    )
+         return Response(
+            "go_to_folder=/",
+            mimetype="text/plain"
+        )
     if data.get("hangup") == "yes":
         return Response(
             "noop=hangup",
