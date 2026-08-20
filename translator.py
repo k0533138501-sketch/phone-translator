@@ -10,7 +10,7 @@ app = Flask(__name__)
 client = OpenAI()
 
 YEMOT_TOKEN = os.environ.get("YEMOT_TOKEN", "")
-
+last_translations = {}
 
 def get_latest_recording():
     url = (
