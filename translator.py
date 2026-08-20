@@ -152,10 +152,10 @@ if "Replay" in data and data.get("Replay") != "1":
         if call_id:
             last_translations[call_id] = translation
 
-       return Response(
-           f"read=t-{translation}. להאזנה נוספת הקישו אחת.=Replay,,1,1,Digits,yes",
-           mimetype="text/plain"
-       )
+        return Response(
+            f"read=t-{translation}. להאזנה נוספת הקישו אחת.=Replay,,1,1,Digits,yes",
+            mimetype="text/plain"
+        )
 
     except Exception as e:
         print("TRANSLATOR ERROR:", repr(e), flush=True)
