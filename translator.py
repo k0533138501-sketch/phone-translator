@@ -156,7 +156,7 @@ if data.get("Replay") == "2":
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
-         if call_id:
+        if call_id:
             last_translations[call_id] = {
                 "recording": recording_path,
                 "translation": translation
