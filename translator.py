@@ -83,7 +83,19 @@ def download_yemot_recording(recording_path):
 def yemot():
     data = request.values.to_dict()
     print("YEMOT DATA:", data, flush=True)
+    call_id = data.get("ApiCallId", "")
+if data.get("Replay") == "1" and call_id in last_translations:
+    translation = last_translations[call_id]
+    return Response(
+        f"read=t-{translation}. להאזנה נוספת הקישו אחת.=Replay,,1,1,Digits,yes",
+        mimetype="text/plain"
+    )
 
+if "Replay" in data and data.get("Replay") != "1":
+    return Response(
+        "id_list_message=t-תודה",
+        mimetype="text/plain"
+    )
     if data.get("hangup") == "yes":
         return Response(
             "noop=hangup",
@@ -137,10 +149,13 @@ def yemot():
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
-        return Response(
-          f"id_list_message=t-{translation}",
-          mimetype="text/plain"
-        )
+       if call_id:
+           last_translations[call_id] = translation
+
+       return Response(
+           f"read=t-{translation}. להאזנה נוספת הקישו אחת.=Replay,,1,1,Digits,yes",
+           mimetype="text/plain"
+       )
 
     except Exception as e:
         print("TRANSLATOR ERROR:", repr(e), flush=True)
