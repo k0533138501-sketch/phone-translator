@@ -149,8 +149,8 @@ if "Replay" in data and data.get("Replay") != "1":
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
-       if call_id:
-           last_translations[call_id] = translation
+        if call_id:
+            last_translations[call_id] = translation
 
        return Response(
            f"read=t-{translation}. להאזנה נוספת הקישו אחת.=Replay,,1,1,Digits,yes",
