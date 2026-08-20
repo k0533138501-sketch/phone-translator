@@ -86,13 +86,22 @@ def yemot():
     call_id = data.get("ApiCallId", "")
 
     if data.get("Replay") == "1" and call_id in last_translations:
-        saved = last_translations[call_id]
-        translation = saved["translation"]
+    saved = last_translations[call_id]
+    recording = saved["recording"]
+    translation = saved["translation"]
 
-        return Response(
-            f"read=t-{translation}=Replay,,1,1,20,No",
-            mimetype="text/plain"
-        )
+    play_path = recording
+
+    if play_path.startswith("ivr2:"):
+        play_path = play_path[5:]
+
+    if play_path.lower().endswith(".wav"):
+        play_path = play_path[:-4]
+
+    return Response(
+        f"read=f-{play_path}.t-{translation}=Replay,,1,1,20,No",
+        mimetype="text/plain"
+    )
 
     if data.get("Replay") == "2":
         return Response(
