@@ -156,15 +156,16 @@ if data.get("Replay") == "2":
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
-       if call_id:
-    last_translations[call_id] = {
-        "recording": recording_path,
-        "translation": translation
-    }
-return Response(
-    f"read=t-{translation}=Replay,,1,1,20,No",
-    mimetype="text/plain"
-)
+         if call_id:
+            last_translations[call_id] = {
+                "recording": recording_path,
+                "translation": translation
+            }
+
+        return Response(
+            f"read=t-{translation}=Replay,,1,1,20,No",
+            mimetype="text/plain"
+        )
 
     except Exception as e:
         print("TRANSLATOR ERROR:", repr(e), flush=True)
