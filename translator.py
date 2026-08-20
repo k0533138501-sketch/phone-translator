@@ -85,24 +85,27 @@ def yemot():
     print("YEMOT DATA:", data, flush=True)
     call_id = data.get("ApiCallId", "")
 
-if data.get("Replay") == "1" and call_id in last_translations:
-    saved = last_translations[call_id]
-    translation = saved["translation"]
+    if data.get("Replay") == "1" and call_id in last_translations:
+        saved = last_translations[call_id]
+        translation = saved["translation"]
 
-    return Response(
-        f"read=t-{translation}=Replay,,1,1,20,No",
-        mimetype="text/plain"
-    )
-if data.get("Replay") == "2":
-    return Response(
-        "go_to_folder=/2",
-        mimetype="text/plain"
-    )
+        return Response(
+            f"read=t-{translation}=Replay,,1,1,20,No",
+            mimetype="text/plain"
+        )
+
+    if data.get("Replay") == "2":
+        return Response(
+            "go_to_folder=/2",
+            mimetype="text/plain"
+        )
+
     if data.get("Replay") == "0":
-         return Response(
+        return Response(
             "go_to_folder=/",
             mimetype="text/plain"
         )
+
     if data.get("hangup") == "yes":
         return Response(
             "noop=hangup",
@@ -111,10 +114,13 @@ if data.get("Replay") == "2":
 
     try:
         print("STEP 1: entered translator try", flush=True)
+
         if not YEMOT_TOKEN:
             raise RuntimeError("YEMOT_TOKEN is not configured")
 
         recording_path = get_latest_recording()
+
+        
         print("STEP 2: got recording path", recording_path, flush=True)
         print("LATEST RECORDING:", recording_path, flush=True)
 
