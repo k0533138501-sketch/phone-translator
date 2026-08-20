@@ -84,18 +84,20 @@ def yemot():
     data = request.values.to_dict()
     print("YEMOT DATA:", data, flush=True)
     call_id = data.get("ApiCallId", "")
-if data.get("Replay") == "1" and call_id in last_translations:
-    translation = last_translations[call_id]
-    return Response(
-        f"read=t-{translation}. להאזנה נוספת הקישו אחת.=Replay,,1,1,Digits,yes",
-        mimetype="text/plain"
-    )
 
-if "Replay" in data and data.get("Replay") != "1":
-    return Response(
-        "id_list_message=t-תודה",
-        mimetype="text/plain"
-    )
+    if data.get("Replay") == "1" and call_id in last_translations:
+        translation = last_translations[call_id]
+        return Response(
+            f"read=t-{translation}. להאזנה נוספת הקישו אחת.=Replay,,1,1,Digits,yes",
+            mimetype="text/plain"
+        )
+
+    if "Replay" in data and data.get("Replay") != "1":
+        return Response(
+            "id_list_message=t-תודה",
+            mimetype="text/plain"
+        )
+
     if data.get("hangup") == "yes":
         return Response(
             "noop=hangup",
