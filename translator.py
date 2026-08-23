@@ -79,9 +79,9 @@ def download_yemot_recording(recording_path):
         return r.read()
 
 
-    @app.route("/", methods=["GET", "POST"])
-    @app.route("/he-ru", methods=["GET", "POST"])
-    def yemot():
+@app.route("/", methods=["GET", "POST"])
+@app.route("/he-ru", methods=["GET", "POST"])
+def yemot():
         data = request.values.to_dict()
         print("YEMOT DATA:", data, flush=True)
         call_id = data.get("ApiCallId", "")
