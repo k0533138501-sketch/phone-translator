@@ -11,12 +11,12 @@ client = OpenAI()
 
 YEMOT_TOKEN = os.environ.get("YEMOT_TOKEN", "")
 last_translations = {}
+def get_latest_recording(folder="2"):
 
-def get_latest_recording():
     url = (
         "https://www.call2all.co.il/ym/api/GetIVR2Dir"
         "?token=" + urllib.parse.quote(YEMOT_TOKEN, safe=":")
-        + "&path=2"
+        + "&path=" + urllib.parse.quote(str(folder), safe="")
     )
 
     with urllib.request.urlopen(url, timeout=30) as r:
@@ -79,12 +79,13 @@ def download_yemot_recording(recording_path):
         return r.read()
 
 
-@app.route("/", methods=["GET", "POST"])
-def yemot():
+    @app.route("/", methods=["GET", "POST"])
+    @app.route("/he-ru", methods=["GET", "POST"])
+    def yemot():
     data = request.values.to_dict()
     print("YEMOT DATA:", data, flush=True)
     call_id = data.get("ApiCallId", "")
-
+    he_ru_mode = request.path == "/he-ru"
     if data.get("Replay") == "1" and call_id in last_translations:
         saved = last_translations[call_id]
         recording = saved["recording"]
@@ -125,8 +126,8 @@ def yemot():
 
         if not YEMOT_TOKEN:
             raise RuntimeError("YEMOT_TOKEN is not configured")
-
-        recording_path = get_latest_recording()
+        recording_path = get_latest_recording("10" if he_ru_mode else "2")
+        
 
         
         print("STEP 2: got recording path", recording_path, flush=True)
@@ -143,7 +144,7 @@ def yemot():
                 transcription = client.audio.transcriptions.create(
                     model="gpt-4o-mini-transcribe",
                     file=audio_file,
-                    language="ru"
+                    language="he" if he_ru_mode else "ru"
                 )
 
             text = transcription.text.strip()
@@ -158,6 +159,10 @@ def yemot():
         result = client.responses.create(
             model="gpt-5.6-luna",
             instructions=(
+                "Translate the user's Hebrew text into natural Russian. "
+                "Return only the Russian translation, without explanation."
+                if he_ru_mode
+                else
                 "Translate the user's Russian text into natural Hebrew. "
                 "Return only the Hebrew translation, without explanation."
             ),
