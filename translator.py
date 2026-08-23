@@ -86,7 +86,7 @@ def yemot():
         print("YEMOT DATA:", data, flush=True)
         call_id = data.get("ApiCallId", "")
         he_ru_mode = request.path == "/he-ru"
-    if data.get("Replay") == "1" and call_id in last_translations:
+        if data.get("Replay") == "1" and call_id in last_translations:
         saved = last_translations[call_id]
         recording = saved["recording"]
         translation = saved["translation"]
