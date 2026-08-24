@@ -220,7 +220,7 @@ def yemot():
             }
 
         return Response(
-           "ok" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
+            "go_to_folder=/10/2" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
             mimetype="text/plain"
         )
 
