@@ -49,8 +49,7 @@ def get_latest_recording(folder="2"):
             wav_files.append((number, candidate))
 
     if not wav_files:
-        raise RuntimeError("No WAV recordings found in folder 2")
-
+       raise RuntimeError("No WAV recordings found in folder " + str(folder))
     wav_files.sort(key=lambda x: x[0])
     latest = wav_files[-1][1]
 
@@ -60,10 +59,10 @@ def get_latest_recording(folder="2"):
     if latest.startswith("/"):
         return "ivr2:" + latest
 
-    if latest.startswith("2/"):
+    if latest.startswith(str(folder) + "/"):
         return "ivr2:/" + latest
 
-    return "ivr2:/2/" + latest
+    return "ivr2:/" + str(folder) + "/" + latest
 
 
 def download_yemot_recording(recording_path):
