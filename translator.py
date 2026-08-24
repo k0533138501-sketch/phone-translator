@@ -220,7 +220,7 @@ def yemot():
             }
 
         return Response(
-            f"id_list_message=f-000" if he_ru_mode else ...
+            f"id_list_message=f-000" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
             mimetype="text/plain"
         )
 
