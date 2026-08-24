@@ -86,7 +86,7 @@ def upload_tts_to_yemot(tts_path):
             url,
             data={
                 "token": YEMOT_TOKEN,
-                "path": "ivr2:/10/2/000.wav",
+                "path": "ivr2:/10/1/000.wav",
             },
             files={
                 "file": ("000.wav", audio_file, "audio/wav")
@@ -220,7 +220,7 @@ def yemot():
             }
 
         return Response(
-            f"read=f-/10/2/000=Replay,,1,1,20,No" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
+            f"read=f-000=Replay,,1,1,20,No" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
             mimetype="text/plain"
         )
 
