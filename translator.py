@@ -86,7 +86,7 @@ def yemot():
         print("YEMOT DATA:", data, flush=True)
         call_id = data.get("ApiCallId", "")
         he_ru_mode = request.path == "/he-ru"
-        if data.get("Replay") == "1" and call_id in last_translations:
+    if data.get("Replay") =="1" and call_id in last_translations:   
             saved = last_translations[call_id]
             recording = saved["recording"]
             translation = saved["translation"]
@@ -103,19 +103,19 @@ def yemot():
                 f"read=f-{play_path}.t-{translation}=Replay,,1,1,20,No",
                 mimetype="text/plain"
             )
-    if data.get("Replay") == "2":
+    if data.get("Replay") == "2":    
         return Response(
             "go_to_folder=/2",
             mimetype="text/plain"
         )
 
-    if data.get("Replay") == "0":
+    if data.get("Replay") == "0":            
         return Response(
             "go_to_folder=/",
             mimetype="text/plain"
         )
 
-    if data.get("hangup") == "yes":
+    if data.get("hangup") == "yes":        
         return Response(
             "noop=hangup",
             mimetype="text/plain"
