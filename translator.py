@@ -173,7 +173,22 @@ def yemot():
         )
 
         translation = result.output_text.strip()
+        if he_ru_mode:
+            tts_path = tempfile.NamedTemporaryFile(
+                suffix=".wav",
+                delete=False
+            ).name
 
+            with client.audio.speech.with_streaming_response.create(
+                model="gpt-4o-mini-tts",
+                voice="coral",
+                input=translation,
+                instructions="Speak clearly in natural Russian.",
+                response_format="wav"
+            ) as speech:
+             speech.stream_to_file(tts_path)
+
+            print("RUSSIAN TTS FILE:", tts_path, flush=True)
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
