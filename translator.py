@@ -5,6 +5,7 @@ import json
 import tempfile
 import urllib.parse
 import urllib.request
+import requests
 
 app = Flask(__name__)
 client = OpenAI()
@@ -77,7 +78,26 @@ def download_yemot_recording(recording_path):
     with urllib.request.urlopen(url, timeout=30) as r:
         return r.read()
 
+def upload_tts_to_yemot(tts_path):
+    url = "https://www.call2all.co.il/ym/api/UploadFile"
 
+    with open(tts_path, "rb") as audio_file:
+        response = requests.post(
+            url,
+            data={
+                "token": YEMOT_TOKEN,
+                "path": "ivr2:/10/2/000.wav",
+            },
+            files={
+                "file": ("000.wav", audio_file, "audio/wav")
+            },
+            timeout=30,
+        )
+
+    print("YEMOT UPLOAD STATUS:", response.status_code, flush=True)
+    print("YEMOT UPLOAD RESPONSE:", response.text, flush=True)
+
+    return response.text
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
 def yemot():
@@ -189,6 +209,7 @@ def yemot():
              speech.stream_to_file(tts_path)
 
             print("RUSSIAN TTS FILE:", tts_path, flush=True)
+            upload_tts_to_yemot(tts_path)
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
@@ -199,7 +220,7 @@ def yemot():
             }
 
         return Response(
-            f"read=t-{translation}=Replay,,1,1,20,No",
+            f"read=f-/10/2/000=Replay,,1,1,20,No" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
             mimetype="text/plain"
         )
 
