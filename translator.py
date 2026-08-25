@@ -109,10 +109,10 @@ def yemot():
     he_ru_mode = request.path == "/he-ru"
     if data.get("Study") == "start":
         if not study_items:
-        return Response(
-            "t-Нет сохранённых упражнений",
-            mimetype="text/plain"
-        )
+            return Response(
+                "t-Нет сохранённых упражнений",
+                mimetype="text/plain"
+            )
 
     item = study_items[0]
     study_positions[call_id] = 0
