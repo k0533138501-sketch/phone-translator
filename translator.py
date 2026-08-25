@@ -197,16 +197,16 @@ if data.get("Study") == "1":
             f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
             mimetype="text/plain"
         ) 
-     if data.get("Study") == "0":
-           study_positions.pop(call_id, None)
-           return Response(
-               "go_to_folder=/",
-               mimetype="text/plain"
-           )
+    if data.get("Study") == "0":
+        study_positions.pop(call_id, None)
+        return Response(
+            "go_to_folder=/",
+            mimetype="text/plain"
+        )
     if data.get("Replay") == "1" and call_id in last_translations:
-        saved = last_translations[call_id]
-        recording = saved["recording"]
-        translation = saved["translation"]
+          saved = last_translations[call_id]
+          recording = saved["recording"]
+          translation = saved["translation"]
 
         play_path = recording
 
