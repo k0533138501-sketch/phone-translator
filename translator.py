@@ -200,7 +200,7 @@ if data.get("Study") == "1":
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
         return Response(
-            "go_to_folder=/",
+             "go_to_folder=/",
             mimetype="text/plain"
         )
     if data.get("Replay") == "1" and call_id in last_translations:
