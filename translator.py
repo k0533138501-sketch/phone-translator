@@ -202,7 +202,7 @@ def yemot():
         return Response(
             "go_to_folder=/",
             mimetype="text/plain"
-        (            
+        )            
     if data.get("Replay") == "1" and call_id in last_translations:
         saved = last_translations[call_id]
         recording = saved["recording"]
@@ -216,14 +216,10 @@ def yemot():
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
 
-        return Response(
-            (
-                f"read=f-{play_path}.f-/10/1/000=Replay,,1,1,20,No"
-                if he_ru_mode
-                else f"read=f-{play_path}.t-{translation}=Replay,,1,1,20,No"
-           ),
-           mimetype="text/plain"
-        )
+         return Response(
+            f"read=f-{play_path}.f-/10/1/000=Replay,,1,1,20,No" if he_ru_mode else f"read=f-{play_path}.t-{translation}=Replay,,1,1,20,No",
+            mimetype="text/plain"
+         )
     if data.get("Replay") == "2":
         return Response(
             "go_to_folder=/2",
