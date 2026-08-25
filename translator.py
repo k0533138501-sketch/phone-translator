@@ -129,7 +129,7 @@ if data.get("Study") == "start":
         f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
         mimetype="text/plain"
     )
-   if data.get("Study") == "1":
+if data.get("Study") == "1":       
     if not study_items:
         return Response(
             "go_to_folder=/",
