@@ -107,8 +107,8 @@ def yemot():
     print("YEMOT DATA:", data, flush=True)
     call_id = data.get("ApiCallId", "")
     he_ru_mode = request.path == "/he-ru"
-if data.get("Study") == "start":
-    if not study_items:
+    if data.get("Study") == "start":
+        if not study_items:
         return Response(
             "t-Нет сохранённых упражнений",
             mimetype="text/plain"
