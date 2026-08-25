@@ -216,13 +216,12 @@ def yemot():
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
 
-         return Response(
-            f"read=f-{play_path}.f-/10/1/000=Replay,,1,1,20,No" if he_ru_mode else f"read=f-{play_path}.t-{translation}=Replay,,1,1,20,No",
-            mimetype="text/plain"
-         )
-    if data.get("Replay") == "2":
         return Response(
-            "go_to_folder=/2",
+            (
+                f"read=f-{play_path}.f-/10/1/000=Replay,,1,1,20,No"
+                if he_ru_mode
+                else f"read=f-{play_path}.t-{translation}=Replay,,1,1,20,No"
+            ),
             mimetype="text/plain"
         )
 
