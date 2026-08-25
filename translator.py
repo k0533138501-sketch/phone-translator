@@ -86,7 +86,7 @@ def upload_tts_to_yemot(tts_path):
             url,
             data={
                 "token": YEMOT_TOKEN,
-                "path": "ivr2:/10/2/000.wav",
+                "path": "ivr2:/10/1/000.wav",
             },
             files={
                 "file": ("000.wav", audio_file, "audio/wav")
@@ -229,7 +229,7 @@ def yemot():
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
         return Response(
-            f"id_list_message=f-{play_path}.f-/10/2/000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,1,1,20,No" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
+            f"id_list_message=f-{play_path}.f-000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,1,1,20,No" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
             mimetype="text/plain"
         )
 
