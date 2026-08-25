@@ -204,9 +204,9 @@ if data.get("Study") == "1":
             mimetype="text/plain"
         )
     if data.get("Replay") == "1" and call_id in last_translations:
-          saved = last_translations[call_id]
-          recording = saved["recording"]
-          translation = saved["translation"]
+        saved = last_translations[call_id]
+        recording = saved["recording"]
+        translation = saved["translation"]
 
         play_path = recording
 
