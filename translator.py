@@ -129,12 +129,12 @@ def yemot():
         f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
         mimetype="text/plain"
     )
-if data.get("Study") == "1":       
-    if not study_items:
-        return Response(
-            "go_to_folder=/",
-            mimetype="text/plain"
-        )
+    if data.get("Study") == "1":       
+        if not study_items:
+            return Response(
+                "go_to_folder=/",
+                mimetype="text/plain"
+            )
 
     pos = study_positions.get(call_id, 0) + 1
 
