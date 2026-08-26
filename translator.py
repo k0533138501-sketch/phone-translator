@@ -185,20 +185,20 @@ def yemot():
     
             study_positions[call_id] = pos
     
-            item = study_items[pos]
-            play_path = item["recording"]
-            translation = item["translation"]
-    
-            if play_path.startswith("ivr2:"):
-                play_path = play_path[5:]
-    
-           if play_path.lower().endswith(".wav"):
-                play_path = play_path[:-4]
-    
-            return Response(
-                f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
-                mimetype="text/plain"
-            ) 
+        item = study_items[pos]
+        play_path = item["recording"]
+        translation = item["translation"]
+
+        if play_path.startswith("ivr2:"):
+            play_path = play_path[5:]
+
+        if play_path.lower().endswith(".wav"):
+            play_path = play_path[:-4]
+
+        return Response(
+            f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
+            mimetype="text/plain"
+        )
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
         return Response(
