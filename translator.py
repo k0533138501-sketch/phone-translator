@@ -138,7 +138,7 @@ def yemot():
             play_path = play_path[:-4]
 
         return Response(
-            f"read=f-{play_path}.t-{translation}.f-M1000=Study,,1,1,20,No",
+            f"read=f-{play_path}.t-{translation}.f-5/000=Study,,1,1,20,No",
             mimetype="text/plain"
         )
     if data.get("Study") == "1":       
