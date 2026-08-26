@@ -106,7 +106,10 @@ def yemot():
     data = request.values.to_dict()
     study_values = request.values.getlist("Study")
     if study_values:
-        data["Study"] = study_values[-1]
+        study_value = study_values[-1]
+        if "?" in study_value:
+            study_value = study_value.split("?", 1)[0]
+        data["Study"] = study_value
     replay_values = request.values.getlist("Replay")
     if replay_values:
         data["Replay"] = replay_values[-1]
@@ -135,7 +138,7 @@ def yemot():
             play_path = play_path[:-4]
 
         return Response(
-            f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
+            f"read=f-{play_path}.t-{translation}.t-Для следующей пары нажмите 1, чтобы удалить текущую пару нажмите 2, для выхода в главное меню нажмите 0=Study,,1,1,20,No",
             mimetype="text/plain"
         )
     if data.get("Study") == "1":       
