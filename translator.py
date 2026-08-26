@@ -107,6 +107,9 @@ def yemot():
     study_values = request.values.getlist("Study")
     if study_values:
         data["Study"] = study_values[-1]
+    replay_values = request.values.getlist("Replay")
+    if replay_values:
+        data["Replay"] = replay_values[-1]
     print("YEMOT DATA:", data, flush=True)
     call_id = data.get("ApiCallId", "")
     he_ru_mode = request.path == "/he-ru"
@@ -189,20 +192,20 @@ def yemot():
     
             study_positions[call_id] = pos
     
-        item = study_items[pos]
-        play_path = item["recording"]
-        translation = item["translation"]
+            item = study_items[pos]
+            play_path = item["recording"]
+            translation = item["translation"]
 
-        if play_path.startswith("ivr2:"):
-            play_path = play_path[5:]
+            if play_path.startswith("ivr2:"):
+                play_path = play_path[5:]
 
-        if play_path.lower().endswith(".wav"):
-            play_path = play_path[:-4]
+            if play_path.lower().endswith(".wav"):
+                play_path = play_path[:-4]
 
-        return Response(
-            f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
-            mimetype="text/plain"
-        )
+            return Response(
+                f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
+                mimetype="text/plain"
+            )
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
         return Response(
