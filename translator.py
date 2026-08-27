@@ -119,7 +119,7 @@ def yemot():
     he_ru_mode = request.path == "/he-ru"
     if data.get("Replay") == "5" and data.get("ApiExtension") != "5":
         return Response(
-            "go_to_folder=/5",
+            "go_to_folder=/5?Study=start",
             mimetype="text/plain"
         )
       
