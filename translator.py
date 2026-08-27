@@ -307,10 +307,11 @@ def yemot():
 
         translation = result.output_text.strip()
         if not he_ru_mode:
-            study_items.append({
-                "recording": recording_path,
-                "translation": translation
-            })
+            if not any(item["recording"] == recording_path for item in study_items):
+                study_items.append({
+                    "recording": recording_path,
+                    "translation": translation
+                })
             print("STUDY APPEND COUNT:", len(study_items), flush=True)
         if he_ru_mode:
             tts_path = tempfile.NamedTemporaryFile(
