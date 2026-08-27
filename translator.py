@@ -174,46 +174,47 @@ def yemot():
             f"id_list_message=f-/{play_path}.t-{translation}&read=f-000=Study,,1,1,20,No",
             mimetype="text/plain"
         )
-    if data.get("Study") == "2":
-        if not study_items:
-            return Response(
-                "go_to_folder=/",
-                mimetype="text/plain"
-            )
+        if data.get("Study") == "2":
+                if not study_items:
+                    return Response(
+                        "go_to_folder=/",
+                        mimetype="text/plain"
+                    )
 
-            pos = study_positions.get(call_id, 0)
-    
-            if pos >= len(study_items):
-                pos = 0
-    
-            study_items.pop(pos)
-    
-            if not study_items:
-                study_positions.pop(call_id, None)
+                pos = study_positions.get(call_id, len(study_items) - 1)
+
+                if pos >= len(study_items):
+                    pos = len(study_items) - 1
+
+                study_items.pop(pos)
+
+                if not study_items:
+                    study_positions.pop(call_id, None)
+                    return Response(
+                        "go_to_folder=/",
+                        mimetype="text/plain"
+                    )
+
+                pos -= 1
+                if pos < 0:
+                    pos = len(study_items) - 1
+
+                study_positions[call_id] = pos
+
+                item = study_items[pos]
+                play_path = item["recording"]
+                translation = item["translation"]
+
+                if play_path.startswith("ivr2:"):
+                    play_path = play_path[5:]
+
+                if play_path.lower().endswith(".wav"):
+                    play_path = play_path[:-4]
+
                 return Response(
-                    "go_to_folder=/",
+                    f"id_list_message=f-/{play_path}.t-{translation}&read=f-000=Study,,1,1,20,No",
                     mimetype="text/plain"
                 )
-    
-            if pos >= len(study_items):
-                pos = 0
-    
-            study_positions[call_id] = pos
-    
-            item = study_items[pos]
-            play_path = item["recording"]
-            translation = item["translation"]
-
-            if play_path.startswith("ivr2:"):
-                play_path = play_path[5:]
-
-            if play_path.lower().endswith(".wav"):
-                play_path = play_path[:-4]
-
-            return Response(
-                f"read=f-{play_path}.t-{translation}=Study,,1,1,20,No",
-                mimetype="text/plain"
-            )
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
         return Response(
