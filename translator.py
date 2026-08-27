@@ -196,8 +196,7 @@ def yemot():
                         mimetype="text/plain"
                     )
 
-                pos -= 1
-                if pos < 0:
+                if pos >= len(study_items):
                     pos = len(study_items) - 1
 
                 study_positions[call_id] = pos
