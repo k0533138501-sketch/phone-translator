@@ -130,8 +130,9 @@ def yemot():
                 mimetype="text/plain"
             )
         print("STUDY START COUNT:", len(study_items), flush=True)
-        item = study_items[0]
-        study_positions[call_id] = 0
+        pos = len(study_items) - 1
+        item = study_items[pos]
+        study_positions[call_id] = pos
         play_path = item["recording"]
         translation = item["translation"]
 
@@ -152,10 +153,10 @@ def yemot():
                 mimetype="text/plain"
             )
 
-        pos = study_positions.get(call_id, 0) + 1
+        pos = study_positions.get(call_id, len(study_items) - 1) - 1
 
-        if pos >= len(study_items):
-            pos = 0
+        if pos < 0:
+            pos = len(study_items) - 1
 
         study_positions[call_id] = pos
 
