@@ -164,7 +164,7 @@ def yemot():
         item = study_items[pos]
         play_path = item["recording"]
         translation = item["translation"]
-
+        print("STUDY DELETE NEXT:", pos, play_path, translation, flush=True)
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
 
