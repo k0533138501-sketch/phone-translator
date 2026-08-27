@@ -129,7 +129,7 @@ def yemot():
                 "t-Нет сохранённых упражнений",
                 mimetype="text/plain"
             )
-
+        print("STUDY START COUNT:", len(study_items), flush=True)
         item = study_items[0]
         study_positions[call_id] = 0
         play_path = item["recording"]
@@ -308,7 +308,8 @@ def yemot():
             study_items.append({
                 "recording": recording_path,
                 "translation": translation
-            })       
+            })
+            print("STUDY APPEND COUNT:", len(study_items), flush=True)
         if he_ru_mode:
             tts_path = tempfile.NamedTemporaryFile(
                 suffix=".wav",
