@@ -54,6 +54,7 @@ def get_latest_recording(folder="2"):
     if not wav_files:
        raise RuntimeError("No WAV recordings found in folder " + str(folder))
     wav_files.sort(key=lambda x: x[0])
+    print("LATEST WAV CANDIDATES:", wav_files[-5:], flush=True)
     latest = wav_files[-1][1]
 
     if latest.startswith("ivr2:"):
