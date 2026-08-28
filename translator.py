@@ -237,7 +237,7 @@ def yemot():
             mimetype="text/plain"
         )
 
-    if data.get("hangup") == "yes":        
+    if data.get("hangup") == "yes" and not data.get("Study"):      
         return Response(
             "noop=hangup",
             mimetype="text/plain"
