@@ -183,11 +183,12 @@ def yemot():
             mimetype="text/plain"
         )
         if data.get("Study") == "2":
-                if not study_items:
-                    return Response(
-                        "go_to_folder=/",
-                        mimetype="text/plain"
-                    )
+             print("DELETE BLOCK ENTERED:", data, flush=True)
+             if not study_items:
+                return Response(
+                    "go_to_folder=/",
+                    mimetype="text/plain"
+                )
 
                 pos = study_positions.get(call_id, len(study_items) - 1)
 
@@ -204,12 +205,14 @@ def yemot():
                     )
 
                 study_positions.pop(call_id, None)
+                print("DELETE RETURNING TO ROOT", flush=True)
                 return Response(
                     "go_to_folder=/",
                     mimetype="text/plain"
                 )
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
+       
         return Response(
             "go_to_folder=/",
             mimetype="text/plain"
