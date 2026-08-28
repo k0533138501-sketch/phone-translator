@@ -198,23 +198,9 @@ def yemot():
                         mimetype="text/plain"
                     )
 
-                if pos >= len(study_items):
-                    pos = len(study_items) - 1
-
-                study_positions[call_id] = pos
-
-                item = study_items[pos]
-                play_path = item["recording"]
-                translation = item["translation"]
-
-                if play_path.startswith("ivr2:"):
-                    play_path = play_path[5:]
-
-                if play_path.lower().endswith(".wav"):
-                    play_path = play_path[:-4]
-
+                study_positions.pop(call_id, None)
                 return Response(
-                    f"id_list_message=f-/{play_path}.t-{translation}&read=f-000=Study,,1,1,20,No",
+                    "go_to_folder=/5",
                     mimetype="text/plain"
                 )
     if data.get("Study") == "0":
