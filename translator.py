@@ -117,8 +117,10 @@ def yemot():
     replay_values = request.values.getlist("Replay")
     if replay_values:
         data["Replay"] = replay_values[-1]
-    if request.path == "/study" and not data.get("Study"):
-        data["Study"] = "start"    
+    if request.path == "/study":
+        data.pop("Replay", None)
+        if not data.get("Study"):
+            data["Study"] = "start"
     print("YEMOT DATA:", data, flush=True)
     call_id = data.get("ApiCallId", "")
     he_ru_mode = request.path == "/he-ru"
