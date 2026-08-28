@@ -104,6 +104,8 @@ def upload_tts_to_yemot(tts_path):
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
 def yemot():
+    if request.method == "HEAD":
+        return Response("", status=200, mimetype="text/plain")
     data = request.values.to_dict()
     study_values = request.values.getlist("Study")
     if study_values:
