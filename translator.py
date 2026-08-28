@@ -205,7 +205,7 @@ def yemot():
 
                 study_positions.pop(call_id, None)
                 return Response(
-                    "go_to_folder=/5",
+                    "go_to_folder=/",
                     mimetype="text/plain"
                 )
     if data.get("Study") == "0":
