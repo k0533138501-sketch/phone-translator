@@ -6,7 +6,7 @@ import tempfile
 import urllib.parse
 import urllib.request
 import requests
-
+import time
 app = Flask(__name__)
 client = OpenAI()
 
@@ -260,6 +260,7 @@ def yemot():
 
         if not YEMOT_TOKEN:
             raise RuntimeError("YEMOT_TOKEN is not configured")
+        time.sleep(3)
         recording_path = get_latest_recording("10" if he_ru_mode else "2")
         
 
