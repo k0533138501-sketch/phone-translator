@@ -262,7 +262,7 @@ def yemot():
 
         if not YEMOT_TOKEN:
             raise RuntimeError("YEMOT_TOKEN is not configured")
-        time.sleep(3)
+        time.sleep(1)
         recording_path = get_latest_recording("10" if he_ru_mode else "2")
         
 
