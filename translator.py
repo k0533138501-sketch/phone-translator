@@ -101,6 +101,7 @@ def upload_tts_to_yemot(tts_path):
     print("YEMOT UPLOAD RESPONSE:", response.text, flush=True)
 
     return response.text
+@app.route("/study", methods=["GET", "POST"])    
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
 def yemot():
@@ -116,6 +117,8 @@ def yemot():
     replay_values = request.values.getlist("Replay")
     if replay_values:
         data["Replay"] = replay_values[-1]
+    if request.path == "/study" and not data.get("Study"):
+        data["Study"] = "start"    
     print("YEMOT DATA:", data, flush=True)
     call_id = data.get("ApiCallId", "")
     he_ru_mode = request.path == "/he-ru"
