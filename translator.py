@@ -7,13 +7,83 @@ import urllib.parse
 import urllib.request
 import requests
 import time
+import psycopg2
+from psycopg2.extras import RealDictCursor
 app = Flask(__name__)
 client = OpenAI()
 
 YEMOT_TOKEN = os.environ.get("YEMOT_TOKEN", "")
+DATABASE_URL = os.environ.get("DATABASE_URL", "")
 last_translations = {}
 study_items = []
 study_positions = {}
+def get_db():
+    return psycopg2.connect(DATABASE_URL)
+
+
+def init_db():
+    if not DATABASE_URL:
+        print("DATABASE_URL is not set", flush=True)
+        return
+
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS study_items (
+                    id SERIAL PRIMARY KEY,
+                    phone_number TEXT NOT NULL,
+                    wav_path TEXT NOT NULL,
+                    russian_text TEXT,
+                    hebrew_text TEXT,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(phone_number, wav_path)
+                )
+            """)
+    print("DATABASE READY", flush=True)
+init_db() 
+def save_study_item(phone_number, wav_path, russian_text, hebrew_text):
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO study_items
+                    (phone_number, wav_path, russian_text, hebrew_text)
+                VALUES (%s, %s, %s, %s)
+                ON CONFLICT (phone_number, wav_path) DO NOTHING
+            """, (phone_number, wav_path, russian_text, hebrew_text))
+
+
+def load_study_items(phone_number):
+    with get_db() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    id,
+                    wav_path AS recording,
+                    russian_text,
+                    hebrew_text AS translation
+                FROM study_items
+                WHERE phone_number = %s
+                ORDER BY id ASC
+            """, (phone_number,))
+            return [dict(row) for row in cur.fetchall()]
+
+
+def delete_study_item(phone_number, item_id):
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM study_items WHERE phone_number = %s AND id = %s",
+                (phone_number, item_id)
+            )
+
+
+def delete_all_study_items(phone_number):
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM study_items WHERE phone_number = %s",
+                (phone_number,)
+            )
 def get_latest_recording(folder="2"):
 
     url = (
