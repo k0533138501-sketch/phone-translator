@@ -274,7 +274,7 @@ def yemot():
 
         if not study_items:
             return Response(
-                "go_to_folder=/",
+                "id_list_message=t-Нет сохранённых упражнений&go_to_folder=/",
                 mimetype="text/plain"
             )
 
