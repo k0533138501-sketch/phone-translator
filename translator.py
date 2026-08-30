@@ -310,7 +310,7 @@ def yemot():
             play_path = play_path[:-4]
 
         return Response(
-            f"id_list_message=t-Запись удалена.f-/{play_path}.t-{translation}&read=f-000=Study,,,1,1,20,No",
+            f"id_list_message=t-Запись удалена.f-{play_path}.t-{translation}&read=f-000=Study,,,1,1,20,No",
             mimetype="text/plain"
         )
     if data.get("Study") == "0":
