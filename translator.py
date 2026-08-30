@@ -268,52 +268,56 @@ def yemot():
             mimetype="text/plain"
         )
     if data.get("Study") == "2":
-         print("DELETE BLOCK ENTERED:", data, flush=True)
-         if not study_items:
+        print("DELETE BLOCK ENTERED:", data, flush=True)
+
+        if not study_items:
             return Response(
                 "go_to_folder=/",
                 mimetype="text/plain"
             )
 
-            pos = study_positions.get(call_id, len(study_items) - 1)
+        pos = study_positions.get(call_id, len(study_items) - 1)
 
-            if pos >= len(study_items):
-                pos = len(study_items) - 1
+        if pos >= len(study_items):
+            pos = len(study_items) - 1
 
-            item = study_items[pos]
-            phone_number = data.get("ApiPhone", "")
-            delete_study_item(phone_number, item["id"])
+        item = study_items[pos]
+        phone_number = data.get("ApiPhone", "")
+        delete_study_item(phone_number, item["id"])
 
-            study_items.clear()
-            study_items.extend(load_study_items(phone_number))
-            if not study_items:
-                study_positions.pop(call_id, None)
-                return Response(
-                    "id_list_message=t-Удалена последняя запись&go_to_folder=/",
-                    mimetype="text/plain"
-                )
+        study_items.clear()
+        study_items.extend(load_study_items(phone_number))
 
-    pos -= 1
-    if pos < 0:
-        pos = len(study_items) - 1
+        if not study_items:
+            study_positions.pop(call_id, None)
+            return Response(
+                "id_list_message=t-Удалена последняя запись&go_to_folder=/",
+                mimetype="text/plain"
+            )
 
-    study_positions[call_id] = pos
+        pos -= 1
+        if pos < 0:
+            pos = len(study_items) - 1
 
-    item = study_items[pos]
-    play_path = item["recording"]
-    translation = item["translation"]
+        study_positions[call_id] = pos
 
-    if play_path.startswith("ivr2:"):
-        play_path = play_path[5:]
+        item = study_items[pos]
+        play_path = item["recording"]
+        translation = item["translation"]
 
-    if play_path.lower().endswith(".wav"):
-        play_path = play_path[:-4]
-    response_text = f"id_list_message=t-Запись удалена.f-{play_path}.t-{translation}&read=f-000=Study,,,1,1,20,No"
-    print("DELETE RESPONSE:", response_text, flush=True)
-    return Response(
-        response_text,
-        mimetype="text/plain"
-    )
+        if play_path.startswith("ivr2:"):
+            play_path = play_path[5:]
+
+        if play_path.lower().endswith(".wav"):
+            play_path = play_path[:-4]
+
+        response_text = f"id_list_message=t-Запись удалена.f-{play_path}.t-{translation}&read=f-000=Study,,,1,1,20,No"
+        print("DELETE RESPONSE:", response_text, flush=True)
+
+        return Response(
+            response_text,
+            mimetype="text/plain"
+        )
        
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
