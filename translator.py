@@ -256,7 +256,7 @@ def yemot():
         item = study_items[pos]
         play_path = item["recording"]
         translation = item["translation"]
-        print("STUDY DELETE NEXT:", pos, play_path, translation, flush=True)
+        print("STUDY NEXT:", pos, play_path, translation, flush=True)
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
 
@@ -289,16 +289,30 @@ def yemot():
                 if not study_items:
                     study_positions.pop(call_id, None)
                     return Response(
-                        "go_to_folder=/",
+                        "id_list_message=t-Удалена последняя запись&go_to_folder=/",
                         mimetype="text/plain"
                     )
 
-                study_positions.pop(call_id, None)
-                print("DELETE RETURNING TO ROOT", flush=True)
-                return Response(
-                    "go_to_folder=/",
-                    mimetype="text/plain"
-                )
+        pos -= 1
+        if pos < 0:
+            pos = len(study_items) - 1
+
+        study_positions[call_id] = pos
+
+        item = study_items[pos]
+        play_path = item["recording"]
+        translation = item["translation"]
+
+        if play_path.startswith("ivr2:"):
+            play_path = play_path[5:]
+
+        if play_path.lower().endswith(".wav"):
+            play_path = play_path[:-4]
+
+        return Response(
+            f"id_list_message=t-Запись удалена.f-/{play_path}.t-{translation}&read=f-000=Study,,,1,1,20,No",
+            mimetype="text/plain"
+        )
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
        
