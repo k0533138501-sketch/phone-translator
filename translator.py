@@ -215,11 +215,11 @@ def yemot():
         phone_number = data.get("ApiPhone", "")
         study_items.clear()
         study_items.extend(load_study_items(phone_number))
-            if not study_items:
-                return Response(
-                    "t-Нет сохранённых упражнений",
-                    mimetype="text/plain"
-                )
+        if not study_items:
+            return Response(
+                "t-Нет сохранённых упражнений",
+                mimetype="text/plain"
+            )
         print("STUDY START COUNT:", len(study_items), flush=True)
         pos = len(study_items) - 1
         item = study_items[pos]
