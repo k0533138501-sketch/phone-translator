@@ -39,7 +39,7 @@ def init_db():
                               UNIQUE(phone_number, wav_path)
                           )
                       """)
-                        cur.execute("""
+            cur.execute("""
                 ALTER TABLE study_items
                 ADD COLUMN IF NOT EXISTS phone_number TEXT
             """)
