@@ -181,6 +181,26 @@ def upload_tts_to_yemot(tts_path):
     print("YEMOT UPLOAD RESPONSE:", response.text, flush=True)
 
     return response.text
+def upload_hebrew_tts_to_yemot(tts_path):
+    url = "https://www.call2all.co.il/ym/api/UploadFile"
+
+    with open(tts_path, "rb") as audio_file:
+        response = requests.post(
+            url,
+            data={
+                "token": YEMOT_TOKEN,
+                "path": "ivr2:/10/1/001.wav",
+            },
+            files={
+                "file": ("001.wav", audio_file, "audio/wav")
+            },
+            timeout=30,
+        )
+
+    print("HEBREW YEMOT UPLOAD STATUS:", response.status_code, flush=True)
+    print("HEBREW YEMOT UPLOAD RESPONSE:", response.text, flush=True)
+
+    return response.text
 @app.route("/study", methods=["GET", "POST"])    
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
@@ -445,6 +465,23 @@ def yemot():
 
             print("RUSSIAN TTS FILE:", tts_path, flush=True)
             upload_tts_to_yemot(tts_path)
+        if not he_ru_mode:
+            hebrew_tts_path = tempfile.NamedTemporaryFile(
+                suffix=".wav",
+                delete=False
+            ).name
+
+            with client.audio.speech.with_streaming_response.create(
+                model="gpt-4o-mini-tts",
+                voice="coral",
+                input=translation,
+                instructions="Speak clearly in natural Hebrew, slightly slower than normal.",
+                response_format="wav"
+            ) as hebrew_speech:
+                hebrew_speech.stream_to_file(hebrew_tts_path)
+
+            print("HEBREW TTS FILE:", hebrew_tts_path, flush=True)
+            upload_hebrew_tts_to_yemot(hebrew_tts_path)           
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
@@ -461,7 +498,7 @@ def yemot():
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
         return Response(
-            f"id_list_message=f-{play_path}.f-/10/1/000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,1,1,20,No" if he_ru_mode else f"read=t-{translation}=Replay,,1,1,20,No",
+            f"id_list_message=f-{play_path}.f-/10/1/000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,1,1,20,No" if he_ru_mode else f"id_list_message=f-/10/1/001&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,,1,1,20,No",
             mimetype="text/plain"
         )
 
