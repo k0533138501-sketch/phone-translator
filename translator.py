@@ -213,8 +213,8 @@ def yemot():
         
     if data.get("Study") == "start":
         phone_number = data.get("ApiPhone", "")
-            study_items.clear()
-            study_items.extend(load_study_items(phone_number))
+        study_items.clear()
+        study_items.extend(load_study_items(phone_number))
             if not study_items:
                 return Response(
                     "t-Нет сохранённых упражнений",
