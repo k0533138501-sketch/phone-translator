@@ -210,7 +210,9 @@ def yemot():
             mimetype="text/plain"
         )
     print("STUDY VALUE BEFORE BLOCKS:", repr(data.get("Study")), flush=True)
-        
+    if data.get("hangup") == "yes":
+        print("IGNORING HANGUP CALLBACK", flush=True)
+        return Response("", mimetype="text/plain")    
     if data.get("Study") == "start":
         phone_number = data.get("ApiPhone", "")
         print("STUDY DB PHONE:", repr(phone_number), flush=True)
