@@ -209,7 +209,7 @@ def yemot():
             "go_to_folder=/5",
             mimetype="text/plain"
         )
-      
+    print("STUDY VALUE BEFORE BLOCKS:", repr(data.get("Study")), flush=True)
         
     if data.get("Study") == "start":
         phone_number = data.get("ApiPhone", "")
