@@ -308,11 +308,13 @@ def yemot():
 
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
-
+        response_text = f"id_list_message=t-Запись удалена.f-{play_path}.t-{translation}&read=f-000=Study,,,1,1,20,No"
+        print("DELETE RESPONSE:", response_text, flush=True)
         return Response(
-            f"id_list_message=t-Запись удалена.f-{play_path}.t-{translation}&read=f-000=Study,,,1,1,20,No",
+            response_text,
             mimetype="text/plain"
         )
+       
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
        
