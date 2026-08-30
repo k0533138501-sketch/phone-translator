@@ -394,7 +394,7 @@ def yemot():
         translation = result.output_text.strip()
         if not he_ru_mode:
             phone_number = data.get("ApiPhone", "")
-
+            print("STUDY SAVE PHONE:", repr(phone_number), flush=True)
             save_study_item(
                 phone_number,
                 recording_path,
