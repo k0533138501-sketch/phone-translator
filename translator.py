@@ -29,15 +29,25 @@ def init_db():
     with get_db() as conn:
         with conn.cursor() as cur:
             cur.execute("""
-                CREATE TABLE IF NOT EXISTS study_items (
-                    id SERIAL PRIMARY KEY,
-                    phone_number TEXT NOT NULL,
-                    wav_path TEXT NOT NULL,
-                    russian_text TEXT,
-                    hebrew_text TEXT,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                    UNIQUE(phone_number, wav_path)
-                )
+                          CREATE TABLE IF NOT EXISTS study_items (
+                              id SERIAL PRIMARY KEY,
+                              phone_number TEXT NOT NULL,
+                              wav_path TEXT NOT NULL,
+                              russian_text TEXT,
+                              hebrew_text TEXT,
+                              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                              UNIQUE(phone_number, wav_path)
+                          )
+                      """)
+                        cur.execute("""
+                ALTER TABLE study_items
+                ADD COLUMN IF NOT EXISTS phone_number TEXT
+            """)
+
+            cur.execute("""
+                CREATE UNIQUE INDEX IF NOT EXISTS
+                study_items_phone_wav_unique
+                ON study_items (phone_number, wav_path)
             """)
     print("DATABASE READY", flush=True)
 init_db() 
@@ -202,11 +212,14 @@ def yemot():
       
         
     if data.get("Study") == "start":
-        if not study_items:
-            return Response(
-                "t-Нет сохранённых упражнений",
-                mimetype="text/plain"
-            )
+        phone_number = data.get("ApiPhone", "")
+            study_items.clear()
+            study_items.extend(load_study_items(phone_number))
+            if not study_items:
+                return Response(
+                    "t-Нет сохранённых упражнений",
+                    mimetype="text/plain"
+                )
         print("STUDY START COUNT:", len(study_items), flush=True)
         pos = len(study_items) - 1
         item = study_items[pos]
@@ -265,8 +278,12 @@ def yemot():
                 if pos >= len(study_items):
                     pos = len(study_items) - 1
 
-                study_items.pop(pos)
+                item = study_items[pos]
+                phone_number = data.get("ApiPhone", "")
+                delete_study_item(phone_number, item["id"])
 
+                study_items.clear()
+                study_items.extend(load_study_items(phone_number))
                 if not study_items:
                     study_positions.pop(call_id, None)
                     return Response(
@@ -374,12 +391,19 @@ def yemot():
 
         translation = result.output_text.strip()
         if not he_ru_mode:
-            if not any(item["recording"] == recording_path for item in study_items):
-                study_items.append({
-                    "recording": recording_path,
-                    "translation": translation
-                })
-            print("STUDY APPEND COUNT:", len(study_items), flush=True)
+            phone_number = data.get("ApiPhone", "")
+
+            save_study_item(
+                phone_number,
+                recording_path,
+                text,
+                translation
+            )
+
+            study_items.clear()
+            study_items.extend(load_study_items(phone_number))
+
+            print("STUDY DB COUNT:", len(study_items), flush=True)
         if he_ru_mode:
             tts_path = tempfile.NamedTemporaryFile(
                 suffix=".wav",
