@@ -189,10 +189,10 @@ def upload_hebrew_tts_to_yemot(tts_path):
             url,
             data={
                 "token": YEMOT_TOKEN,
-                "path": "ivr2:/10/1/001.wav",
+                "path": "ivr2:/1/000.wav",
             },
             files={
-                "file": ("001.wav", audio_file, "audio/wav")
+                "file": ("000.wav", audio_file, "audio/wav")
             },
             timeout=30,
         )
@@ -481,7 +481,7 @@ def yemot():
                 hebrew_speech.stream_to_file(hebrew_tts_path)
 
             print("HEBREW TTS FILE:", hebrew_tts_path, flush=True)
-            # upload_hebrew_tts_to_yemot(hebrew_tts_path)           
+            upload_hebrew_tts_to_yemot(hebrew_tts_path)           
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
