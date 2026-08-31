@@ -501,7 +501,7 @@ def yemot():
             f"id_list_message=f-{play_path}.f-/10/1/000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,,1,1,20,No"
             if he_ru_mode
             else
-            f"id_list_message=t-שלום&"
+            f"id_list_message=f-001&"
         )
     
         print("FINAL YEMOT RESPONSE:", response_text, flush=True)
