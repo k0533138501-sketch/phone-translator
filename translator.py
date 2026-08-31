@@ -475,7 +475,7 @@ def yemot():
                 model="gpt-4o-mini-tts",
                 voice="coral",
                 input=translation,
-                instructions="Speak clearly in natural Hebrew, slightly slower than normal.",
+                instructions="Speak Hebrew extremely slowly. Pronounce every word very slowly and clearly, with long pauses between words. This is for a beginner language learner.",
                 response_format="wav"
             ) as hebrew_speech:
                 hebrew_speech.stream_to_file(hebrew_tts_path)
