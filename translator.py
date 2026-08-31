@@ -202,6 +202,22 @@ def upload_hebrew_tts_to_yemot(tts_path):
     print("HEBREW YEMOT UPLOAD RESPONSE:", response.text, flush=True)
 
     return response.text
+    def create_slow_hebrew_tts_for_study(text):
+    tts_path = tempfile.NamedTemporaryFile(
+        suffix=".wav",
+        delete=False
+    ).name
+
+    with client.audio.speech.with_streaming_response.create(
+        model="gpt-4o-mini-tts",
+        voice="coral",
+        input=text,
+        instructions="Speak Hebrew extremely slowly. Pronounce every word very slowly and clearly, with long pauses between words. This is for a beginner language learner.",
+        response_format="wav"
+    ) as speech:
+        speech.stream_to_file(tts_path)
+
+    return tts_path
 @app.route("/study", methods=["GET", "POST"])    
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
@@ -251,7 +267,9 @@ def yemot():
         study_positions[call_id] = pos
         play_path = item["recording"]
         translation = item["translation"]
-
+        study_tts_path = create_slow_hebrew_tts_for_study(translation)
+        upload_hebrew_tts_to_yemot(study_tts_path)
+       
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
 
@@ -259,7 +277,7 @@ def yemot():
             play_path = play_path[:-4]
 
         return Response(
-            f"id_list_message=f-/{play_path}.t-{translation}&read=f-000=Study,,1,1,20,No",
+            f"id_list_message=f-/{play_path}.f-000&read=f-000=Study,,,1,1,20,No"
             mimetype="text/plain"
         )
     if data.get("Study") == "1":       
