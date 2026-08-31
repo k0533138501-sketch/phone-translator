@@ -297,6 +297,8 @@ def yemot():
         item = study_items[pos]
         play_path = item["recording"]
         translation = item["translation"]
+        study_tts_path = create_slow_hebrew_tts_for_study(translation)
+        upload_hebrew_tts_to_yemot(study_tts_path)
         print("STUDY NEXT:", pos, play_path, translation, flush=True)
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
@@ -305,7 +307,7 @@ def yemot():
             play_path = play_path[:-4]
 
         return Response(
-            f"id_list_message=f-/{play_path}.t-{translation}&read=f-000=Study,,1,1,20,No",
+            f"id_list_message=f-/{play_path}.f-/1/000&read=f-000=Study,,,1,1,20,No",
             mimetype="text/plain"
         )
     if data.get("Study") == "2":
