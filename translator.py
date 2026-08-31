@@ -481,7 +481,7 @@ def yemot():
                 hebrew_speech.stream_to_file(hebrew_tts_path)
 
             print("HEBREW TTS FILE:", hebrew_tts_path, flush=True)
-            upload_hebrew_tts_to_yemot(hebrew_tts_path)           
+            # upload_hebrew_tts_to_yemot(hebrew_tts_path)           
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
