@@ -203,21 +203,21 @@ def upload_hebrew_tts_to_yemot(tts_path):
 
     return response.text
     def create_slow_hebrew_tts_for_study(text):
-    tts_path = tempfile.NamedTemporaryFile(
-        suffix=".wav",
-        delete=False
-    ).name
+        tts_path = tempfile.NamedTemporaryFile(
+            suffix=".wav",
+            delete=False
+        ).name
 
-    with client.audio.speech.with_streaming_response.create(
-        model="gpt-4o-mini-tts",
-        voice="coral",
-        input=text,
-        instructions="Speak Hebrew extremely slowly. Pronounce every word very slowly and clearly, with long pauses between words. This is for a beginner language learner.",
-        response_format="wav"
-    ) as speech:
-        speech.stream_to_file(tts_path)
+        with client.audio.speech.with_streaming_response.create(
+            model="gpt-4o-mini-tts",
+            voice="coral",
+            input=text,
+            instructions="Speak Hebrew extremely slowly. Pronounce every word very slowly and clearly, with long pauses between words. This is for a beginner language learner.",
+            response_format="wav"
+        ) as speech:
+            speech.stream_to_file(tts_path)
 
-    return tts_path
+        return tts_path
 @app.route("/study", methods=["GET", "POST"])    
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
