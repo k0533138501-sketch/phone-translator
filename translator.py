@@ -218,6 +218,66 @@ def create_slow_hebrew_tts_for_study(text):
         speech.stream_to_file(tts_path)
 
     return tts_path
+def create_russian_system_tts(text):
+    tts_path = tempfile.NamedTemporaryFile(
+        suffix=".wav",
+        delete=False
+    ).name
+
+    with client.audio.speech.with_streaming_response.create(
+        model="gpt-4o-mini-tts",
+        voice="coral",
+        input=text,
+        instructions=(
+            "Speak in Russian in a warm, calm, professional female voice. "
+            "Speak clearly and naturally, at a moderately slow pace. "
+            "This is a telephone voice assistant for people learning Hebrew. "
+            "Use clear diction and short natural pauses. "
+            "Do not sound theatrical or overly emotional."
+        ),
+        response_format="wav"
+    ) as speech:
+        speech.stream_to_file(tts_path)
+
+    return tts_path
+def upload_system_voice_to_yemot(tts_path, yemot_path):
+    url = "https://www.call2all.co.il/ym/api/UploadFile"
+
+    with open(tts_path, "rb") as audio_file:
+        response = requests.post(
+            url,
+            data={
+                "token": YEMOT_TOKEN,
+                "path": yemot_path,
+                "convertAudio": "1",
+            },
+            files={
+                "file": ("voice.wav", audio_file, "audio/wav")
+            },
+            timeout=30,
+        )
+
+    print("SYSTEM VOICE UPLOAD STATUS:", response.status_code, flush=True)
+    print("SYSTEM VOICE UPLOAD RESPONSE:", response.text, flush=True)
+
+    return response.text
+def generate_test_main_menu():
+    text = (
+        "Программа голосового перевода и упражнений для изучающих иврит. "
+        "Для перевода с русского на иврит нажмите два. "
+        "Для упражнений нажмите пять."
+    )
+
+    tts_path = create_russian_system_tts(text)
+
+    return upload_system_voice_to_yemot(
+        tts_path,
+        "ivr2:/99/000.wav"
+    )
+@app.route("/generate-test-voice", methods=["GET"])
+def generate_test_voice():
+    result = generate_test_main_menu()
+    return Response(result, mimetype="text/plain")
 @app.route("/study", methods=["GET", "POST"])    
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
