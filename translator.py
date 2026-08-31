@@ -347,14 +347,15 @@ def yemot():
         item = study_items[pos]
         play_path = item["recording"]
         translation = item["translation"]
-
+        study_tts_path = create_slow_hebrew_tts_for_study(translation)
+        upload_hebrew_tts_to_yemot(study_tts_path)
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
 
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
 
-        response_text = f"id_list_message=t-Запись удалена.f-{play_path}.t-{translation}&read=f-000=Study,,,1,1,20,No"
+        response_text = f"id_list_message=t-Запись удалена.f-/{play_path}.f-/1/000&read=f-000=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no"
         print("DELETE RESPONSE:", response_text, flush=True)
 
         return Response(
