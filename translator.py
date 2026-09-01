@@ -485,31 +485,51 @@ def yemot():
     if data.get("Study") == "start":
         phone_number = data.get("ApiPhone", "")
         print("STUDY DB PHONE:", repr(phone_number), flush=True)
+    
         study_items.clear()
         study_items.extend(load_study_items(phone_number))
-        print("STUDY DB LOADED:", len(study_items), study_items, flush=True)
+    
+        print(
+            "STUDY DB LOADED:",
+            len(study_items),
+            study_items,
+            flush=True
+        )
+    
         if not study_items:
             return Response(
-                "t-Нет сохранённых упражнений",
+                "id_list_message=f-/99/M5002&go_to_folder=/",
                 mimetype="text/plain"
             )
-        print("STUDY START COUNT:", len(study_items), flush=True)
-        pos = len(study_items) - 1
+    
+        count = len(study_items)
+    
+        print("STUDY START COUNT:", count, flush=True)
+    
+        pos = count - 1
         item = study_items[pos]
         study_positions[call_id] = pos
+    
         play_path = item["recording"]
         translation = item["translation"]
+
         study_tts_path = create_slow_hebrew_tts_for_study(translation)
         upload_hebrew_tts_to_yemot(study_tts_path)
-       
+    
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
-
+    
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
-
+    
+        if 1 <= count <= 20:
+            number_message = f".f-/99/N{count:02d}"
+        else:
+            number_message = ""
+    
         return Response(
-            f"id_list_message=f-/{play_path}.f-/1/000&read=f-000=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no",
+            f"id_list_message=f-/99/M5000.f-/99/M5001{number_message}.f-/{play_path}.f-/1/000"
+            f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
     if data.get("Study") == "1":       
@@ -584,7 +604,7 @@ def yemot():
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
 
-        if play_path.lower().endswith(".wav"):
+       f play_path.lower().endswith(".wav i"):
             play_path = play_path[:-4]
 
         response_text = f"id_list_message=t-Запись удалена.f-/{play_path}.f-/1/000&read=f-000=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no"
