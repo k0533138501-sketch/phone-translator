@@ -406,7 +406,50 @@ def generate_one_voice():
     )
 
     return Response(result, mimetype="text/plain")    
+@app.route("/generate-number-voice", methods=["GET"])
+def generate_number_voice():
+    number = request.args.get("number", "")
 
+    numbers = {
+        "1": "один",
+        "2": "два",
+        "3": "три",
+        "4": "четыре",
+        "5": "пять",
+        "6": "шесть",
+        "7": "семь",
+        "8": "восемь",
+        "9": "девять",
+        "10": "десять",
+        "11": "одиннадцать",
+        "12": "двенадцать",
+        "13": "тринадцать",
+        "14": "четырнадцать",
+        "15": "пятнадцать",
+        "16": "шестнадцать",
+        "17": "семнадцать",
+        "18": "восемнадцать",
+        "19": "девятнадцать",
+        "20": "двадцать",
+    }
+
+    if number not in numbers:
+        return Response(
+            "Unknown number",
+            status=400,
+            mimetype="text/plain"
+        )
+
+    tts_path = create_russian_system_tts(numbers[number])
+
+    file_name = f"N{int(number):02d}.wav"
+
+    result = upload_system_voice_to_yemot(
+        tts_path,
+        f"ivr2:/99/{file_name}"
+    )
+
+    return Response(result, mimetype="text/plain")
 @app.route("/study", methods=["GET", "POST"])    
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
