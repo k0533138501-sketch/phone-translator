@@ -564,57 +564,75 @@ def yemot():
         )
     if data.get("Study") == "2":
         print("DELETE BLOCK ENTERED:", data, flush=True)
-
+    
         if not study_items:
             return Response(
-                "id_list_message=t-אין תרגילים שמורים",
+                "id_list_message=f-/99/M5002&go_to_folder=/",
                 mimetype="text/plain"
             )
-
+    
         pos = study_positions.get(call_id, len(study_items) - 1)
-
+    
         if pos >= len(study_items):
             pos = len(study_items) - 1
-
+    
         item = study_items[pos]
         phone_number = data.get("ApiPhone", "")
+    
         delete_study_item(phone_number, item["id"])
-
+    
         study_items.clear()
         study_items.extend(load_study_items(phone_number))
-
+    
+        count = len(study_items)
+    
+        print("STUDY COUNT AFTER DELETE:", count, flush=True)
+    
         if not study_items:
             study_positions.pop(call_id, None)
+    
             return Response(
-                "id_list_message=t-Удалена последняя запись&go_to_folder=/",
+                "id_list_message=f-/99/M5006&go_to_folder=/",
                 mimetype="text/plain"
             )
-
+    
         pos -= 1
+    
         if pos < 0:
             pos = len(study_items) - 1
-
+    
         study_positions[call_id] = pos
-
+    
         item = study_items[pos]
         play_path = item["recording"]
         translation = item["translation"]
+    
         study_tts_path = create_slow_hebrew_tts_for_study(translation)
         upload_hebrew_tts_to_yemot(study_tts_path)
+    
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
-
-        if play_path.lower().endswith(".wav i"):
+    
+        if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
-
-        response_text = f"id_list_message=t-Запись удалена.f-/{play_path}.f-/1/000&read=f-000=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no"
+    
+        if 1 <= count <= 20:
+            number_message = f".f-/99/N{count:02d}"
+        else:
+            number_message = ""
+    
+        response_text = (
+            f"id_list_message=f-/99/M5004.f-/99/M5005{number_message}"
+            f".f-/{play_path}.f-/1/000"
+            f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no"
+        )
+    
         print("DELETE RESPONSE:", response_text, flush=True)
-
+    
         return Response(
             response_text,
             mimetype="text/plain"
-        )
-       
+        )       
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
        
