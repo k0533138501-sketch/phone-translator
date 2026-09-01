@@ -644,23 +644,31 @@ def yemot():
         saved = last_translations[call_id]
         recording = saved["recording"]
         translation = saved["translation"]
-
+    
         play_path = recording
-
+    
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
-
+    
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
-
+    
+        if not he_ru_mode:
+            hebrew_tts_path = create_slow_hebrew_tts_for_study(translation)
+            upload_hebrew_tts_to_yemot(hebrew_tts_path)
+    
+            return Response(
+                "id_list_message=f-/1/000"
+                "&read=f-/99/M2001=Replay,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no",
+                mimetype="text/plain"
+            )
+    
         return Response(
-            (
-                f"read=f-{play_path}.f-/10/1/000=Replay,,1,1,20,No"
-                if he_ru_mode
-                else f"read=f-{play_path}.t-{translation}=Replay,,1,1,20,No"
-            ),
+            f"id_list_message=f-{play_path}.f-/10/1/000"
+            f"&read=f-/99/M2001=Replay,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
+       
 
     if data.get("Replay") == "0":            
         return Response(
@@ -794,7 +802,7 @@ def yemot():
             f"id_list_message=f-{play_path}.f-/10/1/000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,,1,1,20,No"
             if he_ru_mode
             else
-            f"id_list_message=f-000&"
+            f"id_list_message=f-000&read=f-/99/M2001=Replay,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no"
         )
     
         print("FINAL YEMOT RESPONSE:", response_text, flush=True)
