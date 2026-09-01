@@ -658,7 +658,7 @@ def yemot():
             upload_hebrew_tts_to_yemot(hebrew_tts_path)
     
             return Response(
-                "id_list_message=f-/1/000"
+                f"id_list_message=f-{play_path}.f-/1/000"
                 "&read=f-/99/M2001=Replay,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no",
                 mimetype="text/plain"
             )
