@@ -353,15 +353,60 @@ def generate_all_system_voices():
 
         results.append(f"{file_name}: {result}")
 
-    return "\n".join(results)    
-@app.route("/generate-test-voice", methods=["GET"])
-@app.route("/generate-all-voices", methods=["GET"])
-def generate_all_voices():
-    result = generate_all_system_voices()
-    return Response(result, mimetype="text/plain")
-def generate_test_voice():
-    result = generate_test_main_menu()
-    return Response(result, mimetype="text/plain")
+    return "\n".join(results)  
+@app.route("/generate-one-voice", methods=["GET"])
+def generate_one_voice():
+    file_name = request.args.get("file")
+
+    messages = {
+        "M5003": (
+            "Для следующего упражнения нажмите один. "
+            "Для удаления текущего упражнения нажмите два. "
+            "Для повторного прослушивания нажмите три. "
+            "Для прослушивания предыдущего упражнения нажмите четыре. "
+            "Для возврата в главное меню нажмите ноль."
+        ),
+
+        "M5004": "Упражнение удалено.",
+
+        "M5005": "Осталось упражнений:",
+
+        "M5006": (
+            "Упражнение удалено. "
+            "Сохранённых упражнений больше нет."
+        ),
+
+        "M5900": (
+            "Внимание! Вы собираетесь удалить все сохранённые упражнения. "
+            "Это действие нельзя отменить. "
+            "Для подтверждения удаления нажмите девять ещё раз. "
+            "Для отмены нажмите ноль."
+        ),
+
+        "M5901": "Все сохранённые упражнения удалены.",
+
+        "M5902": "Сохранённых упражнений нет.",
+
+        "M5903": "Удаление отменено.",
+
+        "M9000": (
+            "Произошла ошибка. "
+            "Попробуйте ещё раз."
+        ),
+    }
+
+    if file_name not in messages:
+        return Response("Unknown file", status=400, mimetype="text/plain")
+
+    tts_path = create_russian_system_tts(messages[file_name])
+
+    result = upload_system_voice_to_yemot(
+        tts_path,
+        f"ivr2:/99/{file_name}.wav"
+    )
+
+    return Response(result, mimetype="text/plain")    
+
 @app.route("/study", methods=["GET", "POST"])    
 @app.route("/", methods=["GET", "POST"])
 @app.route("/he-ru", methods=["GET", "POST"])
