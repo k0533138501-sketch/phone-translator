@@ -604,7 +604,7 @@ def yemot():
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
 
-       f play_path.lower().endswith(".wav i"):
+        if play_path.lower().endswith(".wav i"):
             play_path = play_path[:-4]
 
         response_text = f"id_list_message=t-Запись удалена.f-/{play_path}.f-/1/000&read=f-000=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no"
