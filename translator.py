@@ -659,13 +659,13 @@ def yemot():
     
             return Response(
                 f"id_list_message=f-{play_path}.f-/1/000"
-                "&read=f-/99/M2001=Replay,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no",
+                "&read=f-/99/M2001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
                 mimetype="text/plain"
             )
     
         return Response(
             f"id_list_message=f-{play_path}.f-/10/1/000"
-            f"&read=f-/99/M2001=Replay,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no",
+            f"&read=f-/99/M2001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
        
@@ -802,7 +802,7 @@ def yemot():
             f"id_list_message=f-{play_path}.f-/10/1/000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,,1,1,20,No"
             if he_ru_mode
             else
-            f"id_list_message=f-000&read=f-/99/M2001=Replay,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no"
+            f"id_list_message=f-000&read=f-/99/M2001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no"
         )
     
         print("FINAL YEMOT RESPONSE:", response_text, flush=True)
