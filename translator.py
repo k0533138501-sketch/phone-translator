@@ -718,6 +718,30 @@ def yemot():
             f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
+    
+    if data.get("ClearAll") == "9":
+        phone_number = data.get("ApiPhone", "")
+    
+        delete_all_study_items(phone_number)
+    
+        study_items.clear()
+        study_positions.pop(call_id, None)
+    
+        return Response(
+            "id_list_message=f-/99/M5901&go_to_folder=/",
+            mimetype="text/plain"
+        )
+
+    if data.get("ClearAll") == "0":
+        return Response(
+            "id_list_message=f-/99/M5903&go_to_folder=/5",
+            mimetype="text/plain"
+        )
+    if data.get("Study") == "9":
+        return Response(
+            "read=f-/99/M5900=ClearAll,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
+            mimetype="text/plain"
+        )
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
        
