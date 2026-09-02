@@ -535,7 +535,7 @@ def yemot():
     
         return Response(
             f"id_list_message=f-/99/M5000.f-/99/M5001{number_message}.f-/{play_path}.f-/1/000"
-            f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no",
+            f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
     if data.get("Study") == "1":       
@@ -630,7 +630,7 @@ def yemot():
         response_text = (
             f"id_list_message=f-/99/M5004.f-/99/M5005{number_message}"
             f".f-/{play_path}.f-/1/000"
-            f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,yes,,,,,,InsertLettersTypeChangeNo,no"
+            f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no"
         )
     
         print("DELETE RESPONSE:", response_text, flush=True)
