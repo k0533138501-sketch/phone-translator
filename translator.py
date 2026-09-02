@@ -411,10 +411,15 @@ def generate_one_voice():
 
     tts_path = create_russian_system_tts(messages[file_name])
 
-    result = upload_system_voice_to_yemot(
-        tts_path,
-        f"ivr2:/99/{file_name}.wav"
-    )
+if file_name == "M1000":
+    yemot_path = "ivr2:/M1000.wav"
+else:
+    yemot_path = f"ivr2:/99/{file_name}.wav"
+
+result = upload_system_voice_to_yemot(
+    tts_path,
+    yemot_path
+)
 
     return Response(result, mimetype="text/plain")    
 @app.route("/generate-number-voice", methods=["GET"])
