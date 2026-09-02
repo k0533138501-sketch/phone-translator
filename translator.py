@@ -803,14 +803,17 @@ def yemot():
         
         print("STEP 2: got recording path", recording_path, flush=True)
         print("LATEST RECORDING:", recording_path, flush=True)
-
+        test_total_start = time.perf_counter()
         audio_bytes = download_yemot_recording(recording_path)
+        print("TIMING DOWNLOAD:", round(time.perf_counter() - test_total_start, 3), "sec", flush=True)
         print("STEP 3: downloaded recording, bytes =", len(audio_bytes), flush=True)
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
             tmp.write(audio_bytes)
+           
             tmp_path = tmp.name
 
         try:
+            transcribe_start = time.perf_counter()
             with open(tmp_path, "rb") as audio_file:
                 transcription = client.audio.transcriptions.create(
                     model="gpt-4o-transcribe",
@@ -818,7 +821,7 @@ def yemot():
                     language="he" if he_ru_mode else "ru",
                     prompt="Transcribe the spoken Hebrew exactly as heard. Do not translate it." if he_ru_mode else "Transcribe the spoken Russian exactly as heard. Do not translate it."
                 )
-
+            print("TIMING TRANSCRIPTION:", round(time.perf_counter() - transcribe_start, 3), "sec", flush=True)
             text = transcription.text.strip()
             print("OPENAI TRANSCRIPTION:", text, flush=True)
 
@@ -827,7 +830,7 @@ def yemot():
                 os.remove(tmp_path)
             except Exception:
                 pass
-
+        translation_start = time.perf_counter()
         result = client.responses.create(
             model="gpt-5.6-luna",
             instructions=(
@@ -843,6 +846,7 @@ def yemot():
         )
 
         translation = result.output_text.strip()
+        print("TIMING TRANSLATION:", round(time.perf_counter() - translation_start, 3), "sec", flush=True)
         if not he_ru_mode:
             phone_number = data.get("ApiPhone", "")
             print("STUDY SAVE PHONE:", repr(phone_number), flush=True)
@@ -875,6 +879,7 @@ def yemot():
             print("RUSSIAN TTS FILE:", tts_path, flush=True)
             upload_tts_to_yemot(tts_path)
         if not he_ru_mode:
+            tts_start = time.perf_counter()
             hebrew_tts_path = tempfile.NamedTemporaryFile(
                 suffix=".wav",
                 delete=False
@@ -888,10 +893,13 @@ def yemot():
                 response_format="wav"
             ) as hebrew_speech:
                 hebrew_speech.stream_to_file(hebrew_tts_path)
-
+            print("TIMING HEBREW TTS:", round(time.perf_counter() - tts_start, 3), "sec", flush=True)
             print("HEBREW TTS FILE:", hebrew_tts_path, flush=True)
+            upload_start = time.perf_counter()
             upload_hebrew_tts_to_yemot(hebrew_tts_path) 
+            print("TIMING YEMOT UPLOAD:", round(time.perf_counter() - upload_start, 3), "sec", flush=True)
             time.sleep(3)
+            print("TIMING TOTAL:", round(time.perf_counter() - test_total_start, 3), "sec", flush=True)
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
 
