@@ -638,7 +638,42 @@ def yemot():
         return Response(
             response_text,
             mimetype="text/plain"
-        )       
+        ) 
+    if data.get("Study") == "3":
+        if not study_items:
+            return Response(
+                "id_list_message=f-/99/M5002&go_to_folder=/",
+                mimetype="text/plain"
+            )
+    
+        pos = study_positions.get(call_id, len(study_items) - 1)
+    
+        if pos >= len(study_items):
+            pos = len(study_items) - 1
+    
+        if pos < 0:
+            pos = 0
+    
+        study_positions[call_id] = pos
+    
+        item = study_items[pos]
+        play_path = item["recording"]
+        translation = item["translation"]
+    
+        study_tts_path = create_slow_hebrew_tts_for_study(translation)
+        upload_hebrew_tts_to_yemot(study_tts_path)
+    
+        if play_path.startswith("ivr2:"):
+            play_path = play_path[5:]
+    
+        if play_path.lower().endswith(".wav"):
+            play_path = play_path[:-4]
+    
+        return Response(
+            f"id_list_message=f-{play_path}.f-/1/000"
+            f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
+            mimetype="text/plain"
+        )
     if data.get("Study") == "0":
         study_positions.pop(call_id, None)
        
