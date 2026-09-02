@@ -796,9 +796,10 @@ def yemot():
 
         if not YEMOT_TOKEN:
             raise RuntimeError("YEMOT_TOKEN is not configured")
+        recording_wait_start = time.perf_counter()    
         time.sleep(1)
         recording_path = get_latest_recording("10" if he_ru_mode else "2")
-        
+        print("TIMING WAIT+FIND RECORDING:", round(time.perf_counter() - recording_wait_start, 3), "sec", flush=True) 
 
         
         print("STEP 2: got recording path", recording_path, flush=True)
@@ -898,7 +899,7 @@ def yemot():
             upload_start = time.perf_counter()
             upload_hebrew_tts_to_yemot(hebrew_tts_path) 
             print("TIMING YEMOT UPLOAD:", round(time.perf_counter() - upload_start, 3), "sec", flush=True)
-            time.sleep(3)
+           
             print("TIMING TOTAL:", round(time.perf_counter() - test_total_start, 3), "sec", flush=True)
         print("RUSSIAN TEXT:", text, flush=True)
         print("HEBREW TRANSLATION:", translation, flush=True)
