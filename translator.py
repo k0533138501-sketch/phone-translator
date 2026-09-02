@@ -101,17 +101,17 @@ def get_latest_recording(folder="2"):
         "?token=" + urllib.parse.quote(YEMOT_TOKEN, safe=":")
         + "&path=" + urllib.parse.quote(str(folder), safe="")
     )
-
+    yemot_dir_start = time.perf_counter()
     with urllib.request.urlopen(url, timeout=30) as r:
         data = json.loads(r.read().decode("utf-8"))
-
+    print("TIMING YEMOT DIR API:", round(time.perf_counter() - yemot_dir_start, 3), "sec", flush=True)
     print("YEMOT DIR DATA:", data, flush=True)
 
     if data.get("responseStatus") != "OK":
         raise RuntimeError("GetIVR2Dir failed: " + str(data))
 
     files = data.get("files", [])
-
+    parse_start = time.perf_counter()
     wav_files = []
 
     for item in files:
@@ -136,7 +136,7 @@ def get_latest_recording(folder="2"):
     wav_files.sort(key=lambda x: x[0])
     print("LATEST WAV CANDIDATES:", wav_files[-5:], flush=True)
     latest = wav_files[-1][1]
-
+    print("TIMING RECORDING LIST PARSE:", round(time.perf_counter() - parse_start, 3), "sec", flush=True)
     if latest.startswith("ivr2:"):
         return latest
 
