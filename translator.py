@@ -354,7 +354,20 @@ def generate_all_system_voices():
 
         results.append(f"{file_name}: {result}")
 
-    return "\n".join(results)  
+    return "\n".join(results)
+@app.route("/generate-m1012", methods=["GET"])
+def generate_m1012():
+    text = (
+        "После короткого сигнала произнесите фразу, которую вы хотите перевести. "
+        "По окончании нажмите решётку."
+    )
+
+    tts_path = create_russian_system_tts(text)
+
+    return upload_system_voice_to_yemot(
+        tts_path,
+        "ivr2:/2/M1012.wav"
+    )    
 @app.route("/generate-one-voice", methods=["GET"])
 def generate_one_voice():
     file_name = request.args.get("file")
