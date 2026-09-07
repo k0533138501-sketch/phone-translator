@@ -170,6 +170,7 @@ def upload_tts_to_yemot(tts_path):
             data={
                 "token": YEMOT_TOKEN,
                 "path": "ivr2:/10/1/000.wav",
+                "convertAudio": "1",
             },
             files={
                 "file": ("000.wav", audio_file, "audio/wav")
