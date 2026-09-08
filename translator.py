@@ -384,7 +384,17 @@ def generate_m1452():
     return upload_system_voice_to_yemot(
         tts_path,
         "ivr2:/2/M1452.wav"
-    )    
+    )
+    @app.route("/generate-he-ru-m1452", methods=["GET"])
+def generate_he_ru_m1452():
+    text = "Подождите, готовится перевод."
+
+    tts_path = create_russian_system_tts(text)
+
+    return upload_system_voice_to_yemot(
+        tts_path,
+        "ivr2:/10/M1452.wav"
+    )
 @app.route("/generate-one-voice", methods=["GET"])
 def generate_one_voice():
     file_name = request.args.get("file")
