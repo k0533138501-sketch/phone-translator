@@ -954,7 +954,7 @@ def yemot():
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
         response_text = (
-            f"id_list_message=f-{play_path}.f-/10/1/000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,,1,1,20,No"
+            f"id_list_message=f-{play_path}.f-/10/1/000&read=f-/99/M3001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no"
             if he_ru_mode
             else
             f"id_list_message=f-000&read=f-/99/M2001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no"
