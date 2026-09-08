@@ -385,7 +385,7 @@ def generate_m1452():
         tts_path,
         "ivr2:/2/M1452.wav"
     )
-    @app.route("/generate-he-ru-m1452", methods=["GET"])
+@app.route("/generate-he-ru-m1452", methods=["GET"])
 def generate_he_ru_m1452():
     text = "Подождите, готовится перевод."
 
