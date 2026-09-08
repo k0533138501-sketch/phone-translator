@@ -811,7 +811,7 @@ def yemot():
     
         return Response(
             f"id_list_message=f-{play_path}.f-/10/1/000"
-            f"&read=f-/99/M2001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
+            f"&read=f-/99/M3001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
        
