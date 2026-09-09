@@ -970,17 +970,17 @@ def yemot():
         phone_number = data.get("ApiPhone", "")
         mode = "HE-RU" if he_ru_mode else "RU-HE"
         
-try:
-    save_call_log(
-        phone_number,
-        call_id,
-        mode,
-        text,
-        translation,
-        recording_path
-    )
-except Exception as e:
-    print("CALL LOG ERROR:", repr(e), flush=True)
+        try:
+            save_call_log(
+                phone_number,
+                call_id,
+                mode,
+                text,
+                translation,
+                recording_path
+            )
+        except Exception as e:
+            print("CALL LOG ERROR:", repr(e), flush=True)
         if not he_ru_mode:
             phone_number = data.get("ApiPhone", "")
             print("STUDY SAVE PHONE:", repr(phone_number), flush=True)
