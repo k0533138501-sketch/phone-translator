@@ -170,6 +170,7 @@ def upload_tts_to_yemot(tts_path):
             data={
                 "token": YEMOT_TOKEN,
                 "path": "ivr2:/10/1/000.wav",
+                "convertAudio": "1",
             },
             files={
                 "file": ("000.wav", audio_file, "audio/wav")
@@ -279,6 +280,7 @@ def generate_all_system_voices():
         "M1000": (
             "Голосовой разговорник. "
             "Для перевода с русского на иврит нажмите два. "
+            "Для перевода с иврита на русский нажмите три. "
             "Для упражнений нажмите пять."
         ),
                     
@@ -297,7 +299,11 @@ def generate_all_system_voices():
             "Не удалось распознать запись. "
             "Попробуйте ещё раз."
         ),
-
+        "M3001": (
+            "Для повторного прослушивания нажмите один. "
+            "Для нового перевода с иврита на русский нажмите два. "
+            "Для возврата в главное меню нажмите ноль."
+        ),
         "M5000": "Режим упражнений.",
 
         "M5001": "Количество сохранённых упражнений:",
@@ -378,7 +384,30 @@ def generate_m1452():
     return upload_system_voice_to_yemot(
         tts_path,
         "ivr2:/2/M1452.wav"
-    )    
+    )
+@app.route("/generate-he-ru-m1012", methods=["GET"])
+def generate_he_ru_m1012():
+    text = (
+        "После короткого сигнала произнесите фразу на иврите. "
+        "По окончании нажмите решётку."
+    )
+
+    tts_path = create_russian_system_tts(text)
+
+    return upload_system_voice_to_yemot(
+        tts_path,
+        "ivr2:/10/M1012.wav"
+    )
+@app.route("/generate-he-ru-m1452", methods=["GET"])
+def generate_he_ru_m1452():
+    text = "Подождите, готовится перевод."
+
+    tts_path = create_russian_system_tts(text)
+
+    return upload_system_voice_to_yemot(
+        tts_path,
+        "ivr2:/10/M1452.wav"
+    )
 @app.route("/generate-one-voice", methods=["GET"])
 def generate_one_voice():
     file_name = request.args.get("file")
@@ -387,12 +416,18 @@ def generate_one_voice():
         "M1000": (
             "Голосовой разгово́рник. "
             "Для перевода с русского на иврит нажмите два. "
+            "Для перевода с иврита на русский нажмите три. "
             "Для упражнений нажмите пять."
         ),
         "M2001": (
             "Перевод готов. "
             "Для повторного прослушивания нажмите один. "
             "Для ввода следующей фразы нажмите два. "
+            "Для возврата в главное меню нажмите ноль."
+        ),
+        "M3001": (
+            "Для повторного прослушивания нажмите один. "
+            "Для нового перевода с иврита на русский нажмите два. "
             "Для возврата в главное меню нажмите ноль."
         ),
         "M5003": (
@@ -472,6 +507,26 @@ def generate_number_voice():
         "18": "восемнадцать",
         "19": "девятнадцать",
         "20": "двадцать",
+        "21": "двадцать один",
+        "22": "двадцать два",
+        "23": "двадцать три",
+        "24": "двадцать четыре",
+        "25": "двадцать пять",
+        "26": "двадцать шесть",
+        "27": "двадцать семь",
+        "28": "двадцать восемь",
+        "29": "двадцать девять",
+        "30": "тридцать",
+        "31": "тридцать один",
+        "32": "тридцать два",
+        "33": "тридцать три",
+        "34": "тридцать четыре",
+        "35": "тридцать пять",
+        "36": "тридцать шесть",
+        "37": "тридцать семь",
+        "38": "тридцать восемь",
+        "39": "тридцать девять",
+        "40": "сорок",
     }
 
     if number not in numbers:
@@ -563,7 +618,7 @@ def yemot():
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
     
-        if 1 <= count <= 20:
+        if 1 <= count <= 40:
             number_message = f".f-/99/N{count:02d}"
         else:
             number_message = ""
@@ -799,7 +854,7 @@ def yemot():
     
         return Response(
             f"id_list_message=f-{play_path}.f-/10/1/000"
-            f"&read=f-/99/M2001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
+            f"&read=f-/99/M3001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
        
@@ -942,7 +997,7 @@ def yemot():
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
         response_text = (
-            f"id_list_message=f-{play_path}.f-/10/1/000&read=t-לחזרה הקש אחת. לתפריט הראשי הקש אפס=Replay,,,1,1,20,No"
+            f"id_list_message=f-/10/1/000&read=f-/99/M3001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no"
             if he_ru_mode
             else
             f"id_list_message=f-000&read=f-/99/M2001=Replay,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no"
