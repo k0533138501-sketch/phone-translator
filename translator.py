@@ -141,10 +141,7 @@ def get_latest_recording(folder="2"):
         "https://www.call2all.co.il/ym/api/GetIVR2Dir"
         "?token=" + urllib.parse.quote(YEMOT_TOKEN, safe=":")
         + "&path=" + urllib.parse.quote(str(folder), safe="")
-        + "&orderBy=name"
-        + "&orderDir=desc"
-        + "&filesFrom=0"
-        + "&filesLimit=1"
+       
     )
     yemot_dir_start = time.perf_counter()
     with urllib.request.urlopen(url, timeout=30) as r:
