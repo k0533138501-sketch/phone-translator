@@ -1002,7 +1002,7 @@ def yemot():
                 suffix=".wav",
                 delete=False
             ).name
-
+            tts_start = time.perf_counter()
             with client.audio.speech.with_streaming_response.create(
                 model="gpt-4o-mini-tts",
                 voice="coral",
@@ -1010,17 +1010,19 @@ def yemot():
                 instructions="Speak clearly in natural Russian.",
                 response_format="wav"
             ) as speech:
-             speech.stream_to_file(tts_path)
-
+                 speech.stream_to_file(tts_path)
+            print("TIMING RUSSIAN TTS:", round(time.perf_counter() - tts_start, 3), "sec", flush=True)
             print("RUSSIAN TTS FILE:", tts_path, flush=True)
+            upload_start = time.perf_counter()
             upload_tts_to_yemot(tts_path)
+            print("TIMING RUSSIAN YEMOT UPLOAD:", round(time.perf_counter() - upload_start, 3), "sec", flush=True)
         if not he_ru_mode:
             tts_start = time.perf_counter()
             hebrew_tts_path = tempfile.NamedTemporaryFile(
                 suffix=".wav",
                 delete=False
             ).name
-
+            tts_start = time.perf_counter()
             with client.audio.speech.with_streaming_response.create(
                 model="gpt-4o-mini-tts",
                 voice="coral",
