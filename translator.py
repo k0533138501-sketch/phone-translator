@@ -43,7 +43,18 @@ def init_db():
                 ALTER TABLE study_items
                 ADD COLUMN IF NOT EXISTS phone_number TEXT
             """)
-
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS call_logs (
+                    id SERIAL PRIMARY KEY,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    phone_number TEXT,
+                    call_id TEXT,
+                    mode TEXT,
+                    source_text TEXT,
+                    translation TEXT,
+                    recording_path TEXT
+                )
+            """)
             cur.execute("""
                 CREATE UNIQUE INDEX IF NOT EXISTS
                 study_items_phone_wav_unique
@@ -60,7 +71,35 @@ def save_study_item(phone_number, wav_path, russian_text, hebrew_text):
                 VALUES (%s, %s, %s, %s)
                 ON CONFLICT (phone_number, wav_path) DO NOTHING
             """, (phone_number, wav_path, russian_text, hebrew_text))
-
+def save_call_log(
+    phone_number,
+    call_id,
+    mode,
+    source_text,
+    translation,
+    recording_path
+):
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                INSERT INTO call_logs
+                (
+                    phone_number,
+                    call_id,
+                    mode,
+                    source_text,
+                    translation,
+                    recording_path
+                )
+                VALUES (%s, %s, %s, %s, %s, %s)
+            """, (
+                phone_number,
+                call_id,
+                mode,
+                source_text,
+                translation,
+                recording_path
+            ))
 
 def load_study_items(phone_number):
     with get_db() as conn:
@@ -928,6 +967,20 @@ def yemot():
 
         translation = result.output_text.strip()
         print("TIMING TRANSLATION:", round(time.perf_counter() - translation_start, 3), "sec", flush=True)
+        phone_number = data.get("ApiPhone", "")
+        mode = "HE-RU" if he_ru_mode else "RU-HE"
+        
+try:
+    save_call_log(
+        phone_number,
+        call_id,
+        mode,
+        text,
+        translation,
+        recording_path
+    )
+except Exception as e:
+    print("CALL LOG ERROR:", repr(e), flush=True)
         if not he_ru_mode:
             phone_number = data.get("ApiPhone", "")
             print("STUDY SAVE PHONE:", repr(phone_number), flush=True)
