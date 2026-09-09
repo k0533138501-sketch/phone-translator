@@ -7,6 +7,8 @@ import urllib.parse
 import urllib.request
 import requests
 import time
+from datetime import timezone
+from zoneinfo import ZoneInfo
 import psycopg2
 from psycopg2.extras import RealDictCursor
 app = Flask(__name__)
@@ -1128,7 +1130,7 @@ def view_calls():
     for row in rows:
         html += f"""
             <tr>
-                <td>{row["created_at"]}</td>
+                <td>{row["created_at"].replace(tzinfo=timezone.utc).astimezone(ZoneInfo("Asia/Jerusalem")).strftime("%d.%m.%Y %H:%M:%S")}</td>
                 <td>{row["phone_number"] or ""}</td>
                 <td>{row["mode"] or ""}</td>
                 <td>{row["source_text"] or ""}</td>
