@@ -1071,7 +1071,78 @@ def yemot():
             mimetype="text/plain"
         )
 
+@app.route("/calls", methods=["GET"])
+def view_calls():
+    password = request.args.get("password", "")
 
+    if password != os.environ.get("CALL_LOG_PASSWORD", ""):
+        return Response(
+            "Access denied",
+            status=403,
+            mimetype="text/plain"
+        )
+
+    with get_db() as conn:
+        with conn.cursor(cursor_factory=RealDictCursor) as cur:
+            cur.execute("""
+                SELECT
+                    created_at,
+                    phone_number,
+                    mode,
+                    source_text,
+                    translation
+                FROM call_logs
+                ORDER BY id DESC
+                LIMIT 200
+            """)
+            rows = cur.fetchall()
+
+    html = """
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Call Log</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; }
+            table { border-collapse: collapse; width: 100%; }
+            th, td {
+                border: 1px solid #ccc;
+                padding: 8px;
+                vertical-align: top;
+            }
+            th { background: #f0f0f0; }
+        </style>
+    </head>
+    <body>
+        <h2>Call Log</h2>
+        <table>
+            <tr>
+                <th>Date / Time</th>
+                <th>Phone</th>
+                <th>Mode</th>
+                <th>Source</th>
+                <th>Translation</th>
+            </tr>
+    """
+
+    for row in rows:
+        html += f"""
+            <tr>
+                <td>{row["created_at"]}</td>
+                <td>{row["phone_number"] or ""}</td>
+                <td>{row["mode"] or ""}</td>
+                <td>{row["source_text"] or ""}</td>
+                <td>{row["translation"] or ""}</td>
+            </tr>
+        """
+
+    html += """
+        </table>
+    </body>
+    </html>
+    """
+
+    return Response(html, mimetype="text/html")
 @app.route("/health", methods=["GET"])
 def health():
     return "OK"
