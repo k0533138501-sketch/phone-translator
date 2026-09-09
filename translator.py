@@ -618,7 +618,7 @@ def yemot():
         if play_path.lower().endswith(".wav"):
             play_path = play_path[:-4]
     
-        if 1 <= count <= 20:
+        if 1 <= count <= 40:
             number_message = f".f-/99/N{count:02d}"
         else:
             number_message = ""
