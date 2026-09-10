@@ -1000,19 +1000,41 @@ def yemot():
             print("STUDY DB COUNT:", len(study_items), flush=True)
         if he_ru_mode:
             tts_path = tempfile.NamedTemporaryFile(
-                suffix=".wav",
+                suffix=".mp3",
                 delete=False
             ).name
             tts_start = time.perf_counter()
+
             with client.audio.speech.with_streaming_response.create(
                 model="gpt-4o-mini-tts",
                 voice="coral",
                 input=translation,
                 instructions="Speak clearly in natural Russian.",
-                response_format="wav"
+                response_format="mp3"
             ) as speech:
-                 speech.stream_to_file(tts_path)
-            print("TIMING RUSSIAN TTS:", round(time.perf_counter() - tts_start, 3), "sec", flush=True)
+                print(
+                    "TIMING RUSSIAN TTS RESPONSE:",
+                    round(time.perf_counter() - tts_start, 3),
+                    "sec",
+                    flush=True
+                )
+            
+                tts_stream_start = time.perf_counter()
+                speech.stream_to_file(tts_path)
+            
+            print(
+                "TIMING RUSSIAN TTS STREAM:",
+                round(time.perf_counter() - tts_stream_start, 3),
+                "sec",
+                flush=True
+            )
+
+            print(
+                "TIMING RUSSIAN TTS:",
+                round(time.perf_counter() - tts_start, 3),
+                "sec",
+                flush=True
+            )
             print("RUSSIAN TTS FILE:", tts_path, flush=True)
             upload_start = time.perf_counter()
             upload_tts_to_yemot(tts_path)
