@@ -1000,7 +1000,7 @@ def yemot():
             print("STUDY DB COUNT:", len(study_items), flush=True)
         if he_ru_mode:
             tts_path = tempfile.NamedTemporaryFile(
-                suffix=".mp3",
+                suffix=".opus",
                 delete=False
             ).name
             tts_start = time.perf_counter()
@@ -1010,7 +1010,7 @@ def yemot():
                 voice="coral",
                 input=translation,
                 instructions="Speak clearly in natural Russian.",
-                response_format="mp3"
+                response_format="opus"
             ) as speech:
                 print(
                     "TIMING RUSSIAN TTS RESPONSE:",
