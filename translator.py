@@ -17,7 +17,7 @@ client = OpenAI()
 YEMOT_TOKEN = os.environ.get("YEMOT_TOKEN", "")
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 last_translations = {}
-study_items = []
+study_items = []А
 study_positions = {}
 def get_db():
     return psycopg2.connect(DATABASE_URL)
@@ -939,7 +939,7 @@ def yemot():
             transcribe_start = time.perf_counter()
             with open(tmp_path, "rb") as audio_file:
                 transcription = client.audio.transcriptions.create(
-                    model="gpt-4o-mini-transcribe",
+                    model="gpt-4o-transcribe",
                     file=audio_file,
                     language="he" if he_ru_mode else "ru",
                     prompt="Transcribe the spoken Hebrew exactly as heard. Do not translate it." if he_ru_mode else "Transcribe the spoken Russian exactly as heard. Do not translate it."
