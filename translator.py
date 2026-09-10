@@ -955,7 +955,7 @@ def yemot():
                 pass
         translation_start = time.perf_counter()
         result = client.responses.create(
-            model="gpt-5.6-luna",
+            model="gpt-4.1-mini",
             instructions=(
                 "Translate the user's Hebrew text into natural Russian. "
                 "Return only the Russian translation, without explanation."
