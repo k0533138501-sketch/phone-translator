@@ -1006,10 +1006,10 @@ def yemot():
             tts_start = time.perf_counter()
 
             with client.audio.speech.with_streaming_response.create(
-                model="gpt-4o-mini-tts",
+                model="tts-1",
                 voice="coral",
                 input=translation,
-                instructions="Speak clearly in natural Russian.",
+                
                 response_format="mp3"
             ) as speech:
                 print(
