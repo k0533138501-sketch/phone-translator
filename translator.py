@@ -17,7 +17,7 @@ client = OpenAI()
 YEMOT_TOKEN = os.environ.get("YEMOT_TOKEN", "")
 DATABASE_URL = os.environ.get("DATABASE_URL", "")
 last_translations = {}
-study_items = []А
+study_items = []
 study_positions = {}
 def get_db():
     return psycopg2.connect(DATABASE_URL)
