@@ -1186,7 +1186,7 @@ def arithmetic():
         )
 
     return Response(
-        f"id_list_message=t-בחרתם רמה {answer}",
+        "read=t-כמה זה שתיים ועוד אחת?=math_answer,,Digits,1,1,Digits,yes,yes",
         mimetype="text/plain"
     )
 if __name__ == "__main__":
