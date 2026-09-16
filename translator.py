@@ -1177,7 +1177,7 @@ def health():
 @app.route("/arithmetic", methods=["GET", "POST"])
 def arithmetic():
     return Response(
-        "id_list_message=t-בדיקת חשבון פועלת בהצלחה",
+        "id_list_message=t-ברוכים הבאים לתרגילי חשבון",
         mimetype="text/plain"
     )
 if __name__ == "__main__":
