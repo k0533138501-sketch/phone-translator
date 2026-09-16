@@ -1179,6 +1179,7 @@ def arithmetic():
     answer = request.values.get("answer")
 
     if not answer:
+        print("ARITHMETIC: no answer received; sending READ command", flush=True)
         return Response(
             "read=t-ברוכים הבאים לתרגילי חשבון. לרמה אחת הקישו 1. לרמה שתיים הקישו 2=answer,,Digits,1,1,Digits,yes,yes",
             mimetype="text/plain"
