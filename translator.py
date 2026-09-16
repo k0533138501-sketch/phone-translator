@@ -1182,7 +1182,7 @@ def arithmetic():
     # Первый вход в тренажёр
     if not answer:
         return Response(
-            "read=t-1 הקש=answer,,1,1,10,Digits,yes,no",
+            "read=t-1 הקש=answer,,1,1,10,No,no,no",
             mimetype="text/plain"
         )
 
