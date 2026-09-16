@@ -1197,7 +1197,7 @@ def arithmetic():
         )
 
     return Response(
-        "read=t-כמה זה שתיים ועוד אחת?=math_answer,,Digits,1,1,Digits,yes,yes",
+        "read=t-כמה זה שתיים ועוד אחת?=math_answer,,1,1,10,Digits,yes,no",
         mimetype="text/plain"
     )
 if __name__ == "__main__":
