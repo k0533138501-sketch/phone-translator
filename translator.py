@@ -1180,7 +1180,7 @@ def arithmetic():
 
     if not answer:
         return Response(
-            "read=t-ברוכים הבאים לתרגילי חשבון. לרמה אחת הקישו 1. לרמה שתיים הקישו 2=answer,,Digits,1,1,Digits,yes,yes
+            "read=t-ברוכים הבאים לתרגילי חשבון. לרמה אחת הקישו 1. לרמה שתיים הקישו 2=answer,,Digits,1,1,Digits,yes,yes"
             mimetype="text/plain"
         )
 
