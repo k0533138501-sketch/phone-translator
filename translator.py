@@ -1177,7 +1177,18 @@ def health():
 @app.route("/arithmetic", methods=["GET", "POST"])
 def arithmetic():
     answer = request.values.get("answer")
-
+    math_answer = request.values.get("math_answer")
+    if math_answer:
+        if math_answer == "3":
+            return Response(
+                "id_list_message=t-נכון",
+                mimetype="text/plain"
+            )
+        else:
+            return Response(
+                "id_list_message=t-נסה שוב",
+                mimetype="text/plain"
+            )
     if not answer:
         print("ARITHMETIC: no answer received; sending READ command", flush=True)
         return Response(
