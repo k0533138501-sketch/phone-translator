@@ -1177,8 +1177,8 @@ def health():
 @app.route("/arithmetic", methods=["GET", "POST"])
 def arithmetic():
     answer = request.values.get("answer")
-    math_answer = request.values.get("math_answer")
-
+    math_answers = request.values.getlist("math_answer")
+    math_answer = math_answers[-1] if math_answers else None
     # Первый вход в тренажёр
     if not answer:
         return Response(
