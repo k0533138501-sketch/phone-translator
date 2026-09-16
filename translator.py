@@ -1192,7 +1192,7 @@ def arithmetic():
     if not answer:
         print("ARITHMETIC: no answer received; sending READ command", flush=True)
         return Response(
-            "read=t-הקש 1=answer,,Digits,1,1,Digits,yes,yes",
+            "read=t-1 הקש=answer,,Digits,1,1,Digits,yes,no",
             mimetype="text/plain"
         )
 
