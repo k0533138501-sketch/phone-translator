@@ -1176,8 +1176,16 @@ def health():
 
 @app.route("/arithmetic", methods=["GET", "POST"])
 def arithmetic():
+    answer = request.values.get("answer")
+
+    if not answer:
+        return Response(
+            "read=t-ברוכים הבאים לתרגילי חשבון. לרמה אחת הקישו 1. לרמה שתיים הקישו 2=answer,,Digits,1,1,Digits,yes,yes
+            mimetype="text/plain"
+        )
+
     return Response(
-        "id_list_message=t-ברוכים הבאים לתרגילי חשבון. לרמה אחת הקישו 1. לרמה שתיים הקישו 2.",
+        f"id_list_message=t-בחרתם רמה {answer}",
         mimetype="text/plain"
     )
 if __name__ == "__main__":
