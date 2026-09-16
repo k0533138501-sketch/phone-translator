@@ -1178,6 +1178,15 @@ def health():
 def arithmetic():
     answer = request.values.get("answer")
     math_answer = request.values.get("math_answer")
+
+    # Первый вход в тренажёр
+    if not answer:
+        return Response(
+            "read=t-1 הקש=answer,,1,1,10,Digits,yes,no",
+            mimetype="text/plain"
+        )
+
+    # Проверяем ответ на пример 2 + 1
     if math_answer:
         if math_answer == "3":
             return Response(
@@ -1186,16 +1195,11 @@ def arithmetic():
             )
         else:
             return Response(
-                "id_list_message=t-נסה שוב",
+                "read=t-נסה שוב.t-כמה זה שתיים ועוד אחת?=math_answer,,1,1,10,Digits,yes,no",
                 mimetype="text/plain"
             )
-    if not answer:
-        print("ARITHMETIC: no answer received; sending READ command", flush=True)
-        return Response(
-            "read=t-1 הקש=answer,,1,1,10,Digits,yes,no",
-            mimetype="text/plain"
-        )
 
+    # Первый пример
     return Response(
         "read=t-כמה זה שתיים ועוד אחת?=math_answer,,1,1,10,Digits,yes,no",
         mimetype="text/plain"
