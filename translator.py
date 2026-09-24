@@ -224,7 +224,7 @@ def upload_tts_to_yemot(tts_path):
     print("YEMOT UPLOAD RESPONSE:", response.text, flush=True)
 
     return response.text
-def upload_hebrew_tts_to_yemot(tts_path):
+def upload_hebrew_tts_to_yemot(tts_path, filename="000.wav"):
     url = "https://www.call2all.co.il/ym/api/UploadFile"
 
     with open(tts_path, "rb") as audio_file:
@@ -232,11 +232,11 @@ def upload_hebrew_tts_to_yemot(tts_path):
             url,
             data={
                 "token": YEMOT_TOKEN,
-                "path": "ivr2:/1/000.wav",
+                "path": "ivr2:/1/" + filename,
                 "convertAudio": "1",
             },
             files={
-                "file": ("000.wav", audio_file, "audio/wav")
+                "file": (filename, audio_file, "audio/wav")
             },
             timeout=30,
         )
@@ -652,7 +652,7 @@ def yemot():
         translation = item["translation"]
 
         study_tts_path = create_slow_hebrew_tts_for_study(translation)
-        upload_hebrew_tts_to_yemot(study_tts_path)
+        upload_hebrew_tts_to_yemot(study_tts_path, f"H{item['id']}.wav")
     
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
@@ -688,7 +688,7 @@ def yemot():
         play_path = item["recording"]
         translation = item["translation"]
         study_tts_path = create_slow_hebrew_tts_for_study(translation)
-        upload_hebrew_tts_to_yemot(study_tts_path)
+        upload_hebrew_tts_to_yemot(study_tts_path, f"H{item['id']}.wav")
         print("STUDY NEXT:", pos, play_path, translation, flush=True)
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
@@ -746,7 +746,7 @@ def yemot():
         translation = item["translation"]
     
         study_tts_path = create_slow_hebrew_tts_for_study(translation)
-        upload_hebrew_tts_to_yemot(study_tts_path)
+        upload_hebrew_tts_to_yemot(study_tts_path, f"H{item['id']}.wav")
     
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
@@ -793,7 +793,7 @@ def yemot():
         translation = item["translation"]
     
         study_tts_path = create_slow_hebrew_tts_for_study(translation)
-        upload_hebrew_tts_to_yemot(study_tts_path)
+        upload_hebrew_tts_to_yemot(study_tts_path, f"H{item['id']}.wav")
     
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
@@ -827,7 +827,7 @@ def yemot():
         translation = item["translation"]
     
         study_tts_path = create_slow_hebrew_tts_for_study(translation)
-        upload_hebrew_tts_to_yemot(study_tts_path)
+        upload_hebrew_tts_to_yemot(study_tts_path, f"H{item['id']}.wav")
     
         if play_path.startswith("ivr2:"):
             play_path = play_path[5:]
@@ -886,7 +886,7 @@ def yemot():
     
         if not he_ru_mode:
             hebrew_tts_path = create_slow_hebrew_tts_for_study(translation)
-            upload_hebrew_tts_to_yemot(hebrew_tts_path)
+            upload_hebrew_tts_to_yemot(hebrew_tts_path, f"H{item['id']}.wav")
     
             return Response(
                 f"id_list_message=f-{play_path}.f-/1/000"
