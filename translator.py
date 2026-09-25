@@ -1177,12 +1177,12 @@ def health():
 @app.route("/arithmetic", methods=["GET", "POST"])
 def arithmetic():
     answer = request.values.get("answer")
-    math_answers = request.values.getlist("math_answer")
-    math_answer = math_answers[-1] if math_answers else None
+    math_answer = request.values.get("math_answer")
+
     # Первый вход в тренажёр
     if not answer:
         return Response(
-            "read=t-1 הקש=answer,,1,1,10,No,no,no",
+            "read=t-1 הקש=answer,,1,1,10,Digits,yes,no",
             mimetype="text/plain"
         )
 
@@ -1195,13 +1195,13 @@ def arithmetic():
             )
         else:
             return Response(
-                "read=t-נסה שוב.t-כמה זה שתיים ועוד אחת?=math_answer,,1,1,10,No,no,no",
+                "read=t-נסה שוב.t-כמה זה שתיים ועוד אחת?=math_answer,,1,1,10,Digits,yes,no",
                 mimetype="text/plain"
             )
 
     # Первый пример
     return Response(
-        "read=t-כמה זה שתיים ועוד אחת?=math_answer,,1,1,10,No,no,no",
+        "read=t-כמה זה שתיים ועוד אחת?=math_answer,,1,1,10,Digits,yes,no",
         mimetype="text/plain"
     )
 if __name__ == "__main__":
