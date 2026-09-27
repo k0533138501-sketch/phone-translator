@@ -886,7 +886,7 @@ def yemot():
     
         if not he_ru_mode:
             hebrew_tts_path = create_slow_hebrew_tts_for_study(translation)
-            upload_hebrew_tts_to_yemot(hebrew_tts_path, f"H{item['id']}.wav")
+            upload_hebrew_tts_to_yemot(hebrew_tts_path, "000.wav")
     
             return Response(
                 f"id_list_message=f-{play_path}.f-/1/000"
