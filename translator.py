@@ -697,7 +697,7 @@ def yemot():
             play_path = play_path[:-4]
 
         return Response(
-            f"id_list_message=f-/{play_path}.f-/1/000&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
+            f"id_list_message=f-/{play_path}.f-/1/H{item["id"]}&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
     if data.get("Study") == "2":
