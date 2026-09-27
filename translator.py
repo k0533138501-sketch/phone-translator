@@ -761,7 +761,7 @@ def yemot():
     
         response_text = (
             f"id_list_message=f-/99/M5004.f-/99/M5005{number_message}"
-            f".f-/{play_path}.f-/1/000"
+            f".f-/{play_path}.f-/1/H{item['id']}"
             f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no"
         )
     
@@ -802,7 +802,7 @@ def yemot():
             play_path = play_path[:-4]
     
         return Response(
-            f"id_list_message=f-{play_path}.f-/1/000"
+            f"id_list_message=f-{play_path}.f-/1/H{item['id']}"
             f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
