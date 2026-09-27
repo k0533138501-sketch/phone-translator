@@ -666,7 +666,7 @@ def yemot():
             number_message = ""
     
         return Response(
-            f"id_list_message=f-/99/M5000.f-/99/M5001{number_message}.f-/{play_path}.f-/1/000"
+            f"id_list_message=f-/99/M5000.f-/99/M5001{number_message}.f-/{play_path}.f-/1/H{item['id']}"
             f"&read=f-/99/M5003=Study,,1,1,20,NO,yes,no,,,,,,InsertLettersTypeChangeNo,no",
             mimetype="text/plain"
         )
